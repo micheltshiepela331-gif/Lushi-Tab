@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#101418">
+<title>Lushi Tab</title>
+<style>
+/* ===== Lushi Tab — style Windows 11 (Fluent) ===== */
+:root{--ac:#ff8a1f;--act:#111;--bg:#0f1317;--pan:#202020;--pan2:#2b2b2b;--card:rgba(255,255,255,.055);--ln:rgba(255,255,255,.09);--tx:#f2f2f2;--mu:#a6a6a6;--ok:#3ccf7a;--bad:#ff5b5b;--fs:14px;--tb:48px;--fly:rgba(36,36,36,.86);--blur:blur(28px) saturate(1.6);--hov:rgba(255,255,255,.07);--r:8px}
+:root.light{--pan:#f3f3f3;--pan2:#ebebeb;--card:#fff;--ln:rgba(0,0,0,.09);--tx:#1b1b1b;--mu:#5f5f5f;--fly:rgba(243,243,243,.88);--hov:rgba(0,0,0,.05)}
+:root.notransp{--fly:var(--pan);--blur:none}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font:var(--fs) "Segoe UI Variable","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html.mouse,html.mouse *{cursor:none!important}
+input,textarea,select,button{font:inherit;color:inherit}
+textarea,input[type=text],input[type=number],input[type=search],input:not([type]){user-select:text;-webkit-user-select:text}
+button{cursor:pointer}
+/* bureau */
+#desk{position:fixed;inset:0 0 var(--tb) 0;background:var(--wall);background-size:cover;overflow:hidden}
+#icons{position:absolute;left:6px;top:6px;bottom:6px;display:flex;flex-direction:column;flex-wrap:wrap;align-content:flex-start;gap:4px}
+.di{width:84px;padding:6px 2px;border-radius:6px;text-align:center;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8);border:1px solid transparent}
+.di:hover{background:rgba(255,255,255,.12)}.di.sel{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.35)}
+.ic{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:0 auto 4px;border-radius:10px;font-size:24px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.di span{font-size:12px;display:block;line-height:1.2}
+#clockw{position:absolute;right:26px;top:20px;text-align:right;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.6);pointer-events:none}
+html.noclock #clockw{display:none}
+#clockw .t{font-size:58px;font-weight:300;letter-spacing:-1px}#clockw .d{font-size:16px;opacity:.9}#clockw .w{font-size:13px;opacity:.85;margin-top:4px}
+#snap{position:absolute;background:color-mix(in srgb,var(--ac) 22%,rgba(255,255,255,.15));border:1px solid rgba(255,255,255,.55);border-radius:8px;display:none;pointer-events:none;z-index:8999;backdrop-filter:blur(6px);transition:all .12s}
+/* barre des tâches */
+#bar{position:fixed;left:0;right:0;bottom:0;height:var(--tb);background:var(--fly);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-top:1px solid var(--ln);display:flex;align-items:center;padding:0 6px;z-index:9000;color:var(--tx)}
+#bL,#bR{flex:1 1 0;display:flex;align-items:center;gap:2px;min-width:0}
+#bR{justify-content:flex-end}
+#bC{flex:none;display:flex;align-items:center;gap:3px;max-width:70vw;overflow:hidden}
+#bApps{display:flex;gap:3px;overflow:hidden}
+html.tbleft #bC{order:-1}html.tbleft #bL{order:1;flex:none}html.tbleft #bR{order:2}
+.tbi{position:relative;height:40px;min-width:40px;border:0;border-radius:4px;background:transparent;display:flex;align-items:center;justify-content:center;gap:6px;font-size:20px;color:var(--tx);padding:0 6px;transition:background .1s}
+.tbi:hover,.tbi.open{background:var(--hov)}
+.tbi:active>span{transform:scale(.88)}
+.tbi .ti2{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.tbi.run::after{content:"";position:absolute;bottom:2px;left:50%;width:6px;height:3px;margin-left:-3px;border-radius:3px;background:var(--mu);transition:all .15s}
+.tbi.run.on{background:var(--hov)}.tbi.run.on::after{width:16px;margin-left:-8px;background:var(--ac)}
+#bW{font-size:13px;gap:6px;padding:0 10px}#bW b{font-weight:600}
+.logo{width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,var(--ac),color-mix(in srgb,var(--ac) 55%,#000));color:var(--act);font-weight:900;font-size:15px;display:flex;align-items:center;justify-content:center;font-family:system-ui}
+.tray{height:40px;border:0;border-radius:4px;background:transparent;display:flex;align-items:center;gap:6px;padding:0 8px;color:var(--tx);font-size:12px}
+.tray:hover,.tray.open{background:var(--hov)}
+#bKb{font-weight:700}
+#tclock{flex-direction:column;align-items:flex-end;justify-content:center;gap:0;line-height:1.25;position:relative;min-width:72px}
+#nbadge{position:absolute;top:3px;right:2px;min-width:16px;height:16px;border-radius:8px;background:var(--ac);color:var(--act);font-size:10px;font-weight:800;display:none;align-items:center;justify-content:center;padding:0 4px}
+#nbadge.on{display:flex}
+#bShow{width:8px;height:40px;border:0;border-left:1px solid var(--ln);background:transparent;margin-left:4px}
+#bShow:hover{background:var(--hov)}
+/* panneaux (démarrer, widgets, réglages rapides…) */
+.panel{position:fixed;z-index:9500;background:var(--fly);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--ln);border-radius:var(--r);box-shadow:0 24px 60px rgba(0,0,0,.45);color:var(--tx);display:none;flex-direction:column;overflow:hidden}
+.panel.on{display:flex;animation:pup .18s cubic-bezier(.1,.9,.2,1)}
+@keyframes pup{from{opacity:0;transform:translateY(24px)}}
+#start{left:50%;bottom:calc(var(--tb) + 12px);width:min(640px,calc(100vw - 16px));height:min(680px,calc(100vh - var(--tb) - 24px));margin-left:calc(min(640px,calc(100vw - 16px)) / -2)}
+html.tbleft #start{left:12px;margin-left:0}
+#start .shead{padding:22px 28px 10px}
+#sq{width:100%;background:var(--card);border:1px solid var(--ln);border-bottom:2px solid var(--ac);border-radius:20px;padding:9px 16px 9px 38px;color:var(--tx);outline:0;background-image:radial-gradient(circle at 18px 50%,transparent 0,transparent 0)}
+.sqw{position:relative}.sqw::before{content:"🔍";position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:13px;opacity:.8}
+#sbody{flex:1;overflow:auto;padding:4px 20px 12px}
+.sh{display:flex;align-items:center;justify-content:space-between;margin:10px 8px 8px;font-weight:600;font-size:14px}
+.sh button{border:0;background:var(--card);border:1px solid var(--ln);border-radius:4px;padding:3px 10px;font-size:12px;color:var(--tx)}
+.sgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
+@media (max-width:620px){.sgrid{grid-template-columns:repeat(4,1fr)}}
+.sm{border-radius:4px;padding:10px 2px 8px;text-align:center;font-size:12px;border:1px solid transparent;background:none;color:var(--tx);line-height:1.2}
+.sm .ic{width:36px;height:36px;font-size:20px;border-radius:9px;margin-bottom:6px}
+.sm:hover,.sm.kb,.srow:hover,.srow.kb{background:var(--hov)}
+.srec{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.srow{display:flex;align-items:center;gap:12px;padding:8px 10px;border-radius:4px;border:0;background:none;color:var(--tx);text-align:left;width:100%;min-width:0}
+.srow .ic{width:32px;height:32px;font-size:17px;margin:0;border-radius:8px;flex:none}
+.srow b{font-weight:400;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.srow small{color:var(--mu);font-size:11.5px}
+.srow>div{min-width:0}
+.sletter{margin:10px 10px 2px;font-size:12px;color:var(--ac);font-weight:700}
+.sbot{display:flex;align-items:center;justify-content:space-between;padding:10px 40px;border-top:1px solid var(--ln);background:rgba(0,0,0,.08)}
+#sUser,#sPow{display:flex;align-items:center;gap:10px;border:0;background:transparent;border-radius:4px;padding:6px 10px;color:var(--tx)}
+#sUser:hover,#sPow:hover{background:var(--hov)}#sPow{font-size:18px}
+.av{width:32px;height:32px;border-radius:50%;background:var(--ac);color:var(--act);display:flex;align-items:center;justify-content:center;font-weight:800}
+#widgets{left:12px;top:12px;bottom:calc(var(--tb) + 12px);width:min(460px,calc(100vw - 24px));padding:16px;overflow:auto;display:none}
+#widgets.on{display:block;animation:pleft .2s cubic-bezier(.1,.9,.2,1)}
+@keyframes pleft{from{opacity:0;transform:translateX(-30px)}}
+.wtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.wtop .t{font-size:22px;font-weight:600}
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.wc2{background:var(--card);border:1px solid var(--ln);border-radius:8px;padding:12px;min-height:110px}
+.wc2.big{grid-column:1/-1}
+.wc2 h5{font-size:12px;color:var(--mu);font-weight:600;margin-bottom:6px}
+.wc2 .v{font-size:30px;font-weight:300}
+#qs{right:12px;bottom:calc(var(--tb) + 12px);width:min(370px,calc(100vw - 24px))}
+.qgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:18px 18px 8px}
+.qt{display:flex;flex-direction:column;gap:6px;align-items:center;border:0;background:none;color:var(--tx);font-size:12px}
+.qt span{width:100%;height:48px;border-radius:6px;background:var(--card);border:1px solid var(--ln);display:flex;align-items:center;justify-content:center;font-size:19px}
+.qt.on span{background:var(--ac);border-color:var(--ac);color:var(--act)}
+.qsl{display:flex;align-items:center;gap:12px;padding:10px 22px}
+.qsl input{flex:1;accent-color:var(--ac)}
+.qfoot{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-top:1px solid var(--ln);background:rgba(0,0,0,.08);font-size:13px}
+.qfoot button{border:0;background:none;color:var(--tx);border-radius:4px;padding:6px 10px;font-size:16px}.qfoot button:hover{background:var(--hov)}
+#nc{right:12px;bottom:calc(var(--tb) + 12px);width:min(370px,calc(100vw - 24px));max-height:calc(100vh - var(--tb) - 24px);background:transparent;border:0;box-shadow:none;gap:10px;backdrop-filter:none;overflow:visible}
+#nc .card{background:var(--fly);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--ln);border-radius:var(--r);box-shadow:0 18px 50px rgba(0,0,0,.4);padding:14px}
+#nc .nl{max-height:min(320px,40vh);overflow:auto;display:flex;flex-direction:column;gap:6px}
+.nitem{background:var(--card);border:1px solid var(--ln);border-radius:6px;padding:8px 10px;font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.nitem small{color:var(--mu);display:block;font-size:11px}.nitem div{flex:1}.nitem button{border:0;background:none;color:var(--mu);font-size:13px}
+#tv{inset:0 0 var(--tb) 0;border-radius:0;border:0;background:rgba(0,0,0,.35);padding:30px 20px 16px}
+#tv.on{display:flex}
+.tvw{flex:1;display:flex;flex-wrap:wrap;gap:18px;align-content:center;justify-content:center;overflow:auto}
+.tvc{width:230px;border-radius:8px;background:var(--fly);border:2px solid transparent;overflow:hidden;color:var(--tx);box-shadow:0 10px 30px rgba(0,0,0,.4);text-align:left}
+.tvc:hover{border-color:var(--ac)}
+.tvc .h{display:flex;align-items:center;gap:8px;padding:6px 6px 6px 10px;font-size:12.5px}.tvc .h b{flex:1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tvc .h button{border:0;background:none;color:var(--tx);border-radius:4px;width:26px;height:24px}.tvc .h button:hover{background:#c42b1c;color:#fff}
+.tvc .p{height:120px;background:var(--wall);background-size:cover;display:flex;align-items:center;justify-content:center;font-size:44px}
+.tvd{display:flex;gap:12px;justify-content:center;padding-top:14px;flex-wrap:wrap}
+.tvd button{min-width:150px;height:84px;border-radius:8px;border:2px solid transparent;background:var(--wall);background-size:cover;color:#fff;font-weight:600;text-shadow:0 1px 3px #000;position:relative}
+.tvd button.on{border-color:var(--ac)}.tvd button.add{background:var(--fly);color:var(--tx);text-shadow:none;font-size:13px}
+.tvd button i{position:absolute;top:4px;right:6px;font-style:normal;font-size:12px;opacity:.85}
+#clip{left:50%;bottom:calc(var(--tb) + 12px);width:min(380px,calc(100vw - 24px));margin-left:calc(min(380px,calc(100vw - 24px)) / -2);max-height:60vh;padding:12px}
+.cl{overflow:auto;display:flex;flex-direction:column;gap:6px}
+.cli{background:var(--card);border:1px solid var(--ln);border-radius:6px;padding:10px;text-align:left;color:var(--tx);font-size:13px;white-space:pre-wrap;max-height:90px;overflow:hidden}
+.cli:hover{border-color:var(--ac)}
+#at{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:9900;background:var(--fly);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--ln);border-radius:var(--r);padding:16px;display:none;gap:12px;max-width:94vw;flex-wrap:wrap;justify-content:center;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+#at.on{display:flex}
+#at .tvc{width:170px}#at .tvc .p{height:90px;font-size:34px}#at .tvc.sel{border-color:var(--ac)}
+#sf{padding:10px;flex-direction:row;gap:10px;z-index:9600}
+#sf.on{display:flex;animation:none}
+.sfl{position:relative;width:86px;height:56px}
+.sfl button{position:absolute;border:1px solid var(--ln);background:var(--card);border-radius:4px;padding:0}
+.sfl button:hover{background:var(--ac);border-color:var(--ac)}
+#sa{position:fixed;z-index:9400;display:none;border-radius:8px;background:rgba(0,0,0,.28);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.3);padding:14px;overflow:auto;flex-wrap:wrap;gap:12px;align-content:flex-start;justify-content:center}
+#sa.on{display:flex}#sa p{width:100%;text-align:center;color:#fff;text-shadow:0 1px 3px #000;font-size:13px}
+#sa .tvc{width:170px}#sa .tvc .p{height:80px;font-size:30px}
+/* fenêtres */
+.win{position:absolute;min-width:260px;min-height:170px;background:var(--pan);border:1px solid var(--ln);border-radius:var(--r);box-shadow:0 8px 28px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden;animation:wopen .16s cubic-bezier(.1,.9,.2,1)}
+@keyframes wopen{from{opacity:0;transform:scale(.95)}}
+.win.closing{transition:opacity .12s,transform .12s;opacity:0;transform:scale(.95)}
+.win.act{box-shadow:0 18px 50px rgba(0,0,0,.5);border-color:color-mix(in srgb,var(--ac) 45%,var(--ln))}
+.win.max{left:0!important;top:0!important;width:100%!important;height:100%!important;border-radius:0;border:0}
+.win.hid,.win.od{display:none}
+.wt{height:34px;flex:none;display:flex;align-items:center;gap:8px;padding-left:12px;background:var(--pan2);touch-action:none}
+.win:not(.act) .wt{opacity:.75}
+.wt .ti{flex:1;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wt>button{width:34px;height:28px;border:0;border-radius:4px;background:none;font-size:14px;color:var(--tx)}
+.wt>button:hover{background:var(--hov)}
+.wcs{display:flex;align-self:stretch}
+.wc{width:46px;border:0;background:none;color:var(--tx);font-size:13px}
+.wc:hover{background:var(--hov)}.wc.x:hover{background:#c42b1c;color:#fff}
+.wb{flex:1;overflow:auto;padding:12px;user-select:text;-webkit-user-select:text}
+.wr{position:absolute;right:0;bottom:0;width:18px;height:18px;touch-action:none}
+/* menu contextuel */
+#ctx{position:fixed;z-index:9800;background:var(--fly);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--ln);border-radius:var(--r);padding:4px;min-width:220px;display:none;box-shadow:0 12px 30px rgba(0,0,0,.4);color:var(--tx)}
+#ctx button{display:flex;width:100%;gap:10px;align-items:center;text-align:left;background:none;border:0;border-radius:4px;padding:8px 12px;color:var(--tx);font-size:13px}#ctx button:hover{background:var(--hov)}#ctx hr{border:0;border-top:1px solid var(--ln);margin:4px}
+#cur{position:fixed;left:0;top:0;z-index:99999;pointer-events:none;display:none;will-change:transform}
+html.mouse #cur{display:block}
+/* contrôles communs des applis */
+.btn{background:var(--card);border:1px solid var(--ln);border-radius:4px;padding:6px 12px;color:var(--tx)}.btn.p{background:var(--ac);border-color:var(--ac);color:var(--act);font-weight:600}.btn.d{color:var(--bad)}
+.btn:hover{filter:brightness(1.1)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}
+.inp{background:var(--card);border:1px solid var(--ln);border-bottom-color:var(--mu);border-radius:4px;padding:6px 10px;color:var(--tx);min-width:0}
+.inp:focus{outline:0;border-bottom:2px solid var(--ac)}
+.note{font-size:12px;color:var(--mu);line-height:1.45}
+h4{margin:12px 0 6px;font-size:13.5px;font-weight:600}
+table{border-collapse:collapse;width:100%}td,th{padding:5px 6px;border-bottom:1px solid var(--ln);text-align:left;font-size:13px}th{color:var(--mu);font-weight:600}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.calc{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.calc button{height:50px;border-radius:4px;border:1px solid var(--ln);background:var(--card);font-size:19px;color:var(--tx)}.calc .o{background:var(--pan2)}.calc .eq{background:var(--ac);color:var(--act);font-weight:700}
+.cdisp{padding:8px 12px;text-align:right;margin-bottom:8px}.cdisp .h{color:var(--mu);font-size:12px;min-height:16px}.cdisp .v{font-size:36px;font-weight:600;word-break:break-all}
+.nlist{width:190px;flex:none;border-right:1px solid var(--ln);overflow:auto}.nlist div{padding:8px 12px;border-bottom:1px solid var(--ln);font-size:13px}.nlist div.on{background:color-mix(in srgb,var(--ac) 18%,transparent)}
+.ned{flex:1;display:flex;flex-direction:column;min-width:0}.ned textarea{flex:1;resize:none;border:0;outline:0;background:var(--card);padding:12px;line-height:1.5;font-size:15px}
+.accbar{display:flex;gap:3px;flex-wrap:wrap;padding:4px 6px;border-top:1px solid var(--ln);background:var(--pan2)}.accbar button{min-width:30px;height:28px;border-radius:4px;border:1px solid var(--ln);background:var(--card);color:var(--tx)}
+.osk{display:flex;flex-direction:column;gap:5px}.osk .r{display:flex;gap:5px;justify-content:center}.osk button{flex:1;min-width:0;height:46px;border-radius:5px;border:1px solid var(--ln);background:var(--card);font-size:17px;color:var(--tx)}.osk button.w2{flex:1.6}.osk button.sp{flex:6}.osk button.on{background:var(--ac);color:var(--act)}
+.kbd{display:inline-block;border:1px solid var(--ln);border-bottom-width:3px;border-radius:5px;padding:1px 6px;font-size:12px;background:var(--card);margin:1px}
+.seg{display:inline-flex;border:1px solid var(--ln);border-radius:5px;overflow:hidden;flex-wrap:wrap}.seg button{border:0;background:var(--card);padding:7px 12px;color:var(--tx)}.seg button.on{background:var(--ac);color:var(--act);font-weight:600}
+.walls{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px}.walls button{height:56px;border-radius:6px;border:2px solid transparent}.walls button.on{border-color:var(--ac)}
+.accs{display:flex;gap:8px;flex-wrap:wrap}.accs button{width:34px;height:34px;border-radius:6px;border:2px solid transparent}.accs button.on{border-color:var(--tx)}
+iframe{border:0;width:100%;height:100%;background:#fff}
+.lock{position:fixed;inset:0;z-index:99990;background:var(--wall);background-size:cover;display:none;flex-direction:column;align-items:center;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.6);padding-top:12vh}.lock.on{display:flex}.lock .d{font-size:20px;font-weight:600}.lock .t{font-size:96px;font-weight:600;line-height:1.1}.lock .h{margin-top:auto;margin-bottom:8vh;opacity:.85;font-size:14px}
+#toast{position:fixed;right:14px;bottom:calc(var(--tb) + 14px);background:var(--fly);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);color:var(--tx);border:1px solid var(--ln);border-radius:var(--r);padding:12px 16px;font-size:13px;z-index:99000;display:none;max-width:min(360px,90vw);box-shadow:0 12px 34px rgba(0,0,0,.4);animation:tin .2s ease-out}
+#toast small{display:block;color:var(--mu);font-size:11px;margin-bottom:3px}
+@keyframes tin{from{opacity:0;transform:translateX(30px)}}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}.cal div{padding:6px 0;border-radius:50%;font-size:13px}.cal .h{color:var(--mu);font-size:11px}.cal .td{background:var(--ac);color:var(--act);font-weight:700}
+.chip{display:inline-block;background:var(--card);border:1px solid var(--ln);border-radius:20px;padding:3px 10px;font-size:12px;margin:2px}
+.fx{display:flex;flex:1;min-height:0}.fside{width:170px;flex:none;border-right:1px solid var(--ln);padding:8px 4px;overflow:auto}.fside button{display:flex;gap:8px;width:100%;border:0;background:none;color:var(--tx);padding:7px 10px;border-radius:4px;text-align:left;font-size:13px}.fside button.on,.fside button:hover{background:var(--hov)}
+.fmain{flex:1;overflow:auto;padding:10px;min-width:0}.fbar{display:flex;gap:8px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--ln)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}.fi{border:1px solid transparent;border-radius:4px;background:none;color:var(--tx);padding:10px 4px;text-align:center;font-size:12px;word-break:break-word}.fi:hover{background:var(--hov);border-color:var(--ln)}.fi .e{font-size:34px;display:block;margin-bottom:4px}
+#night{position:fixed;inset:0;background:rgba(255,145,30,.22);mix-blend-mode:multiply;pointer-events:none;z-index:99995;display:none}
+#dim{position:fixed;inset:0;background:#000;pointer-events:none;z-index:99996;opacity:0}
+@media (max-width:640px){#clockw .t{font-size:40px}.nlist{width:120px}.fside{width:120px}#bW .wtxt{display:none}}
+</style>
+
+</head>
+<body>
+<div id="desk"><div id="icons"></div><div id="clockw"><div class="t" id="ct">--:--</div><div class="d" id="cd"></div><div class="w" id="cw"></div></div><div id="snap"></div></div>
+<div id="bar">
+ <div id="bL"><button class="tbi" id="bW" title="Widgets (Ctrl+Alt+W)"><span id="bWi">⛅</span><span class="wtxt"><b id="bWt">--°C</b></span></button></div>
+ <div id="bC"><button class="tbi" id="bStart" title="Démarrer (touche Windows)"><span class="logo">L</span></button><button class="tbi" id="bSearch" title="Rechercher">🔍</button><button class="tbi" id="bTV" title="Vue des tâches et bureaux (Ctrl+Alt+Tab)">🗂️</button><div id="bApps"></div></div>
+ <div id="bR"><button class="tray" id="bKb" title="Disposition du clavier (Alt+Maj)">FR</button><button class="tray" id="bQS" title="Paramètres rapides (Ctrl+Alt+A)"><span id="tnet">📶</span><span id="tbat"></span></button><button class="tray" id="tclock" title="Notifications et calendrier (Ctrl+Alt+N)"><span id="tt">--:--</span><span id="td" style="font-size:11px;opacity:.85"></span><span id="nbadge"></span></button><button id="bShow" title="Afficher le bureau (Ctrl+Alt+D)"></button></div>
+</div>
+<div id="start" class="panel"><div class="shead"><div class="sqw"><input id="sq" placeholder="Tapez ici pour rechercher" autocomplete="off"></div></div><div id="sbody"></div>
+ <div class="sbot"><button id="sUser" title="Paramètres du compte"><span class="av" id="sav">M</span><span id="sname2">Michel</span></button><button id="sPow" title="Marche / Arrêt">⏻</button></div></div>
+<div id="widgets" class="panel"></div>
+<div id="qs" class="panel"></div>
+<div id="nc" class="panel"></div>
+<div id="tv" class="panel"></div>
+<div id="clip" class="panel"></div>
+<div id="sf" class="panel"></div>
+<div id="at"></div>
+<div id="sa"></div>
+<div id="ctx"></div>
+<div class="lock" id="lock"><div class="d" id="ld"></div><div class="t" id="lt"></div><div class="h">Touchez, cliquez ou appuyez sur une touche pour ouvrir</div></div>
+<div id="toast"></div>
+<div id="night"></div><div id="dim"></div>
+<svg id="cur" width="20" height="20" viewBox="0 0 20 20"></svg>
+
+<script>
+'use strict';
+/* ================== stockage ================== */
+var KEY='lushitab_v1';
+var D={accent:'orange',align:'center',transp:true,deskClock:true,night:false,dnd:false,bright:100,notifs:[],nunread:0,clips:[],recent:[],ndesk:1,pinTask:['files','notes','kalamu','change','caisse','web'],pinStart:['files','notes','calc','agenda','osk','change','caisse','kalamu','plan','shop','site','web','and0','and1','set','help'],name:'Michel',wall:0,theme:'dark',fs:14,layout:'auto',ptr:'petit',pcol:'blanc',dbl:400,osk:false,notes:[],rates:{USD:1,CDF:2850,ZMW:26.5,TZS:2650,ZAR:18.4,EUR:0.92},spread:1.5,caisse:[],apps:null,winpos:{}};
+try{var sv=JSON.parse(localStorage.getItem(KEY)||'null');if(sv)for(var k in sv)D[k]=sv[k];}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){toast('Mémoire pleine : exporte tes données (Paramètres)');}}
+var $=function(s,r){return (r||document).querySelector(s);},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function toast(t,ms){var e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){e.style.display='none';},ms||2600);}
+function fmtN(v,d){if(!isFinite(v))return '—';return Number(v).toLocaleString('fr-FR',{minimumFractionDigits:d==null?0:d,maximumFractionDigits:d==null?2:d});}
+var CAP=function(){try{var C=window.Capacitor;if(!(C&&C.isNativePlatform&&C.isNativePlatform()))return null;var N=function(m,o){return C.nativePromise('LushiNative',m,o||{});};return {AppLauncher:{openUrl:function(o){return N('openApp',{pkg:o.url,fenetre:D.freeform!==false}).then(function(r){return {completed:!!(r&&r.ok)};});}},Browser:{open:function(o){return N('openUrl',o);}},Kiosk:{pin:function(){return N('pin');},unpin:function(){return N('unpin');},quit:function(){return N('quit');},home:function(){return N('homeSettings');}}};}catch(e){return null;}};
+
+/* ================== fonds d'écran, thème, couleur d'accent ================== */
+var WALLS=['radial-gradient(ellipse at 70% 40%,#5fa8ff 0,#2456c9 30%,#0d1d4a 70%,#060b1c 100%)','radial-gradient(ellipse at 30% 60%,#ffd1a8 0,#f08a5d 25%,#7a3b8f 60%,#1d1236 100%)','linear-gradient(135deg,#0f2027,#203a43 50%,#2c5364)','linear-gradient(135deg,#1f1c2c,#928dab)','linear-gradient(135deg,#232526,#414345)','linear-gradient(135deg,#0b486b,#f56217)','linear-gradient(135deg,#134e5e,#71b280)','linear-gradient(135deg,#3a1c71,#d76d77 60%,#ffaf7b)','linear-gradient(160deg,#141e30,#243b55)','radial-gradient(circle at 30% 20%,#ff8a1f 0,#7a2e00 35%,#120c08 75%)','radial-gradient(ellipse at 50% 110%,#c7e6ff 0,#8fb8ec 35%,#e9eef6 75%)'];
+var ACCENTS={orange:['#ff8a1f','#111'],bleu:['#2f80ed','#fff'],vert:['#16a34a','#fff'],violet:['#8b5cf6','#fff'],rose:['#e5487a','#fff'],rouge:['#e5484d','#fff'],jaune:['#f5c518','#111'],turquoise:['#0ea5a4','#fff']};
+function applyLook(){var R=document.documentElement,a=ACCENTS[D.accent]||ACCENTS.orange;R.style.setProperty('--wall',WALLS[D.wall]||WALLS[0]);R.classList.toggle('light',D.theme==='light');R.style.setProperty('--fs',(D.fs||14)+'px');R.style.setProperty('--ac',a[0]);R.style.setProperty('--act',a[1]);
+ R.classList.toggle('notransp',!D.transp);R.classList.toggle('tbleft',D.align==='left');R.classList.toggle('noclock',!D.deskClock);
+ $('#night').style.display=D.night?'block':'none';$('#dim').style.opacity=String(Math.max(0,(100-(D.bright||100))/100*0.75));
+ $('#sav').textContent=(D.name||'M').charAt(0).toUpperCase();$('#sname2').textContent=D.name||'Michel';ptrShape();}
+
+
+/* ================== pointeur de souris petit et précis ================== */
+var PSZ={mini:12,petit:16,moyen:22,grand:30},PCOL={blanc:['#fff','#000'],noir:['#111','#fff'],orange:['#ff8a1f','#111'],jaune:['#ffe14d','#111']};
+var CUR={x:-50,y:-50,shape:'arrow',raf:0};
+function ptrShape(){var s=PSZ[D.ptr]||16,c=PCOL[D.pcol]||PCOL.blanc,svg=$('#cur');svg.setAttribute('width',s);svg.setAttribute('height',s);
+ var p={arrow:'<path d="M2 1.5v15.5l4.2-4 2.7 6 2.6-1.1-2.6-6h5.9z" fill="'+c[0]+'" stroke="'+c[1]+'" stroke-width="1.3" stroke-linejoin="round"/>',
+  hand:'<path d="M7 1.8c1 0 1.7.7 1.7 1.7v5.4l1-.2c.9-.1 1.7.4 1.9 1.2l.1.4 1-.2c.9-.1 1.7.4 1.9 1.3l.1.3.6-.1c1 0 1.8.7 1.8 1.7v2.8c0 2.2-1.8 4-4 4h-2.6c-1.3 0-2.6-.6-3.4-1.6l-3.3-4.2c-.6-.8-.4-1.9.4-2.4.7-.5 1.6-.4 2.2.2l.7.7V3.5c0-1 .8-1.7 1.8-1.7z" fill="'+c[0]+'" stroke="'+c[1]+'" stroke-width="1.2"/>',
+  text:'<path d="M7 2h6M7 18h6M10 2v16" stroke="'+c[1]+'" stroke-width="3" stroke-linecap="round"/><path d="M7 2h6M7 18h6M10 2v16" stroke="'+c[0]+'" stroke-width="1.4" stroke-linecap="round"/>',
+  move:'<path d="M10 1l3 3h-2v5h5V7l3 3-3 3v-2h-5v5h2l-3 3-3-3h2v-5H4v2l-3-3 3-3v2h5V4H7z" fill="'+c[0]+'" stroke="'+c[1]+'" stroke-width="1"/>',
+  resize:'<path d="M3 3h6L7 5l8 8 2-2v6h-6l2-2-8-8-2 2z" fill="'+c[0]+'" stroke="'+c[1]+'" stroke-width="1"/>'}[CUR.shape];
+ svg.innerHTML=p;CUR.off=CUR.shape==='arrow'?[1.5*s/20,1*s/20]:[s/2,s/2];}
+function shapeFor(el){if(!el||!el.closest)return 'arrow';if(el.closest('.wr'))return 'resize';if(el.closest('.wt')&&!el.closest('button'))return 'move';if(el.closest('textarea,input[type=text],input[type=number],input[type=search],input:not([type])'))return 'text';if(el.closest('button,a,.di,.sm,.tbi,.srow,.qt,.tvc,.fi,.nlist div,select,label,[data-click]'))return 'hand';return 'arrow';}
+function curMove(e){if(e.pointerType!=='mouse')return;if(!document.documentElement.classList.contains('mouse'))document.documentElement.classList.add('mouse');CUR.x=e.clientX;CUR.y=e.clientY;var sh=shapeFor(e.target);if(sh!==CUR.shape){CUR.shape=sh;ptrShape();}
+ if(!CUR.raf)CUR.raf=requestAnimationFrame(function(){CUR.raf=0;$('#cur').style.transform='translate('+(CUR.x-CUR.off[0])+'px,'+(CUR.y-CUR.off[1])+'px)';});}
+window.addEventListener('pointermove',curMove,{passive:true,capture:true});window.addEventListener('pointerdown',function(e){if(e.pointerType==='mouse')curMove(e);else document.documentElement.classList.remove('mouse');},{capture:true});
+document.addEventListener('mouseleave',function(){$('#cur').style.transform='translate(-50px,-50px)';});
+
+/* ================== dispositions de clavier ================== */
+var LAYOUTS={
+ auto:{n:'Système (comme Android)',s:'SYS'},
+ fr:{n:'AZERTY — France',s:'FR',m:{Backquote:['²',''],Digit1:['&','1'],Digit2:['é','2','~'],Digit3:['"','3','#'],Digit4:["'",'4','{'],Digit5:['(','5','['],Digit6:['-','6','|'],Digit7:['è','7','`'],Digit8:['_','8','\\'],Digit9:['ç','9','^'],Digit0:['à','0','@'],Minus:[')','°',']'],Equal:['=','+','}'],
+  KeyQ:['a','A'],KeyW:['z','Z'],KeyE:['e','E','€'],BracketLeft:['^','¨'],BracketRight:['$','£','¤'],KeyA:['q','Q'],Semicolon:['m','M'],Quote:['ù','%'],Backslash:['*','µ'],IntlBackslash:['<','>'],KeyZ:['w','W'],KeyM:[',','?'],Comma:[';','.'],Period:[':','/'],Slash:['!','§']}},
+ be:{n:'AZERTY — Belgique',s:'BE',m:{Backquote:['²','³'],Digit1:['&','1','|'],Digit2:['é','2','@'],Digit3:['"','3','#'],Digit4:["'",'4'],Digit5:['(','5'],Digit6:['§','6','^'],Digit7:['è','7'],Digit8:['!','8'],Digit9:['ç','9','{'],Digit0:['à','0','}'],Minus:[')','°'],Equal:['-','_'],
+  KeyQ:['a','A'],KeyW:['z','Z'],KeyE:['e','E','€'],BracketLeft:['^','¨','['],BracketRight:['$','*',']'],KeyA:['q','Q'],Semicolon:['m','M'],Quote:['ù','%','´'],Backslash:['µ','£','`'],IntlBackslash:['<','>','\\'],KeyZ:['w','W'],KeyM:[',','?'],Comma:[';','.'],Period:[':','/'],Slash:['=','+','~']}},
+ us:{n:'QWERTY — US / anglais',s:'US',m:{}},
+ intl:{n:'QWERTY — avec accents (AltGr)',s:'US+',m:{KeyE:['e','E','é'],KeyA:['a','A','à'],KeyQ:['q','Q','â'],KeyW:['w','W','è'],KeyR:['r','R','ê'],KeyU:['u','U','ù'],KeyI:['i','I','î'],KeyO:['o','O','ô'],KeyC:['c','C','ç'],KeyY:['y','Y','ë'],KeyT:['t','T','ï'],Digit5:['5','%','€']}},
+ de:{n:'QWERTZ — Allemagne / Suisse',s:'DE',m:{KeyY:['z','Z'],KeyZ:['y','Y'],Semicolon:['ö','Ö'],Quote:['ä','Ä'],BracketLeft:['ü','Ü'],Minus:['ß','?','\\'],Digit2:['2','"','²'],Digit3:['3','§','³'],Digit6:['6','&'],Digit7:['7','/','{'],Digit8:['8','(','['],Digit9:['9',')',']'],Digit0:['0','=','}'],KeyQ:['q','Q','@'],KeyE:['e','E','€'],Comma:[',',';'],Period:['.',':'],Slash:['-','_'],BracketRight:['+','*','~']}}};
+var LORD=['auto','fr','be','us','intl','de'];
+function layoutBadge(){$('#bKb').textContent=(LAYOUTS[D.layout]||LAYOUTS.auto).s;}
+function cycleLayout(){var i=LORD.indexOf(D.layout);D.layout=LORD[(i+1)%LORD.length];save();layoutBadge();toast('Clavier : '+LAYOUTS[D.layout].n);rfSettings();}
+function insertText(el,t){if(!el)return;if(typeof el.setRangeText==='function'&&el.selectionStart!=null){var a=el.selectionStart,b=el.selectionEnd;el.setRangeText(t,a,b,'end');}else el.value+=t;el.dispatchEvent(new Event('input',{bubbles:true}));}
+document.addEventListener('keydown',function(e){
+ var t=e.target,ed=t&&(t.tagName==='TEXTAREA'||(t.tagName==='INPUT'&&/^(text|search|)$/.test(t.type||'')));
+ if(e.altKey&&e.shiftKey&&!e.ctrlKey){e.preventDefault();cycleLayout();return;}
+ if(ed&&D.layout!=='auto'&&LAYOUTS[D.layout]&&LAYOUTS[D.layout].m){var ag=(e.getModifierState&&e.getModifierState('AltGraph'))||(e.ctrlKey&&e.altKey);if((e.ctrlKey||e.altKey||e.metaKey)&&!ag)return;
+  var m=LAYOUTS[D.layout].m[e.code];if(m){var ch=ag?m[2]:(e.shiftKey?m[1]:m[0]);if(ch){e.preventDefault();insertText(t,ch);return;}if(ag)return;}
+  else if(/^Key[A-Z]$/.test(e.code)&&!ag&&e.key&&e.key.length===1){var L=e.code.slice(3).toLowerCase(),up=e.shiftKey!==(e.getModifierState&&e.getModifierState('CapsLock'));if(e.key.toLowerCase()!==L){e.preventDefault();insertText(t,up?L.toUpperCase():L);return;}}}
+ globalKeys(e,ed);},true);
+
+var APPF={};
+/* ================== applications ================== */
+var GH='https://micheltshiepela331-gif.github.io/';
+var APPS=[
+ {id:'files',n:'Explorateur de fichiers',ic:'📁',c:'#e8a317',sec:'Bureau'},{id:'notes',n:'Bloc-notes',ic:'📝',c:'#2f6fed',sec:'Bureau'},{id:'calc',n:'Calculatrice',ic:'🧮',c:'#4c5563',sec:'Bureau'},{id:'osk',n:'Clavier à l\'écran',ic:'⌨️',c:'#6b4fd8',sec:'Bureau'},{id:'agenda',n:'Calendrier',ic:'📅',c:'#d9534f',sec:'Bureau'},
+ {id:'change',n:'Change USD/CDF',ic:'💱',c:'#1d9a6c',sec:'Shop'},{id:'caisse',n:'Caisse du jour',ic:'💵',c:'#2e8b57',sec:'Shop'},
+ {id:'kalamu',n:'Kalamu',ic:'📄',c:'#2b579a',sec:'LushiPratique',url:GH+'KALAMU/'},{id:'plan',n:'Lushi Plan',ic:'📐',c:'#ff8a1f',sec:'LushiPratique',url:GH+'lushi-plan/'},{id:'shop',n:'Shop Rédemption',ic:'🏪',c:'#b5651d',sec:'LushiPratique',url:GH+'shop-redemption/'},{id:'site',n:'LushiPratique',ic:'🌐',c:'#e0701b',sec:'LushiPratique',url:GH},
+ {id:'web',n:'Internet',ic:'🔎',c:'#1a73e8',sec:'Bureau'},{id:'set',n:'Paramètres',ic:'⚙️',c:'#555e6b',sec:'Système'},{id:'help',n:'Aide',ic:'❓',c:'#3b7dd8',sec:'Système'}];
+var DEF_ANDROID=[{n:'WhatsApp',pkg:'com.whatsapp',ic:'💬',c:'#25d366'},{n:'YouTube',pkg:'com.google.android.youtube',ic:'▶️',c:'#e62117'},{n:'Chrome',pkg:'com.android.chrome',ic:'🌍',c:'#1a73e8'},{n:'Gmail',pkg:'com.google.android.gm',ic:'✉️',c:'#d93025'},{n:'Play Store',pkg:'com.android.vending',ic:'🛍️',c:'#01875f'},{n:'Photos',pkg:'com.google.android.apps.photos',ic:'🖼️',c:'#f4b400'},{n:'Paramètres Android',pkg:'com.android.settings',ic:'🔧',c:'#5f6368'},{n:'Facebook',pkg:'com.facebook.katana',ic:'📘',c:'#1877f2'}];
+if(!D.apps)D.apps=DEF_ANDROID.slice();
+function allApps(){return APPS.concat(D.apps.map(function(a,i){return {id:'and'+i,n:a.n,ic:a.ic||'📱',c:a.c||'#444',sec:'Applis Android',pkg:a.pkg};}));}
+function findApp(id){var L=allApps();for(var i=0;i<L.length;i++)if(L[i].id===id)return L[i];return null;}
+function launch(id){var a=findApp(id);if(!a)return;closePanels();
+ D.recent=[id].concat((D.recent||[]).filter(function(x){return x!==id;})).slice(0,8);save();
+ if(a.pkg){var P=CAP();if(P&&P.AppLauncher){P.AppLauncher.openUrl({url:a.pkg}).then(function(r){if(r&&r.completed===false)toast(a.n+' n\'est pas installée sur cette tablette');}).catch(function(){toast('Impossible d\'ouvrir '+a.n);});}else{location.href='intent://#Intent;package='+a.pkg+';end';setTimeout(function(){toast('Pour ouvrir les applis Android, installe Lushi Tab en APK');},900);}return;}
+ if(a.url){openWin(a.id,a.n,a.ic,function(b){b.style.padding='0';b.innerHTML='<iframe src="'+a.url+'" allow="fullscreen; clipboard-read; clipboard-write" referrerpolicy="no-referrer"></iframe>';},{w:Math.min(1100,innerWidth-40),h:innerHeight-120,tools:'<button data-ext="'+a.url+'" title="Ouvrir dans le navigateur">↗</button>'});return;}
+ var f=APPF[a.id];if(f)f(a);}
+function appIcon(a,cls){return '<div class="'+(cls||'ic')+'" style="background:'+(a.c||'#555')+'">'+a.ic+'</div>';}
+function onLong(el,fn){var t=null;el.addEventListener('pointerdown',function(e){if(e.pointerType==='mouse')return;var x=e.clientX,y=e.clientY;t=setTimeout(function(){t=null;el._long=Date.now();fn(x,y);},550);});['pointerup','pointercancel','pointerleave'].forEach(function(k){el.addEventListener(k,function(){clearTimeout(t);});});el.addEventListener('contextmenu',function(e){e.preventDefault();if(el._long&&Date.now()-el._long<800)return;fn(e.clientX,e.clientY);});}
+function longJust(el){return el._long&&Date.now()-el._long<800;}
+
+/* ================== fenêtres, bureaux virtuels, Snap ================== */
+var WINS=[],ZT=10,DESK=0,NDESK=Math.max(1,D.ndesk||1);
+function onDesk(w){return w.desk===DESK;}
+function tbH(){return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tb'))||48;}
+function WA(){return {w:innerWidth,h:innerHeight-tbH()};}
+function openWin(id,title,ic,fill,o){o=o||{};var ex=WINS.filter(function(w){return w.id===id;})[0];if(ex&&!o.multi){if(ex.desk!==DESK)switchDesk(ex.desk,1);ex.el.classList.remove('hid');focusWin(ex);return ex;}
+ var el=document.createElement('div');el.className='win';var small=innerWidth<700||innerHeight<480,W=Math.min(o.w||560,innerWidth-16),H=Math.min(o.h||420,innerHeight-60),pos=D.winpos[id];
+ var x=pos?pos[0]:Math.max(8,(innerWidth-W)/2+((WINS.length%5)-2)*26),y=pos?pos[1]:Math.max(8,(innerHeight-60-H)/2+((WINS.length%5)-2)*22);if(pos&&pos[2]){W=Math.min(pos[2],innerWidth-8);H=Math.min(pos[3],innerHeight-60);}
+ x=Math.max(0,Math.min(x,innerWidth-120));y=Math.max(0,Math.min(y,innerHeight-100));
+ el.style.cssText='left:'+x+'px;top:'+y+'px;width:'+W+'px;height:'+H+'px';
+ el.innerHTML='<div class="wt"><span>'+ic+'</span><span class="ti">'+esc(title)+'</span>'+(o.tools||'')+'<div class="wcs"><button class="wc" data-a="min" title="Réduire">─</button><button class="wc" data-a="max" title="Agrandir — maintenir pour les dispositions">▢</button><button class="wc x" data-a="x" title="Fermer (Ctrl+W)">✕</button></div></div><div class="wb"></div><div class="wr"></div>';
+ $('#desk').appendChild(el);var w={id:id,title:title,ic:ic,el:el,desk:DESK};WINS.push(w);if(small||o.max)el.classList.add('max');
+ el.addEventListener('pointerdown',function(){focusWin(w);},true);
+ $$('.wt [data-a]',el).forEach(function(b){b.onclick=function(e){e.stopPropagation();if(longJust(b))return;var a=b.dataset.a;if(a==='x')closeWin(w);else if(a==='min')minWin(w);else toggleMax(w);};});
+ var mb=$('[data-a=max]',el),ht=null;mb.addEventListener('pointerenter',function(e){if(e.pointerType!=='mouse')return;ht=setTimeout(function(){snapFly(w,mb);},420);});mb.addEventListener('pointerleave',function(){clearTimeout(ht);});onLong(mb,function(){snapFly(w,mb);});
+ $$('.wt [data-ext]',el).forEach(function(b){b.onclick=function(e){e.stopPropagation();extOpen(b.dataset.ext);};});
+ dragWin(w);fill($('.wb',el),w);focusWin(w);taskbar();return w;}
+function focusWin(w){var ae=document.activeElement;if(ae&&ae!==document.body&&!w.el.contains(ae)&&ae.blur)ae.blur();WINS.forEach(function(x){x.el.classList.toggle('act',x===w);});w.el.style.zIndex=++ZT;w.el.classList.remove('hid');taskbar();}
+function closeWin(w){if(w.onclose)try{w.onclose();}catch(e){}w.el.classList.add('closing');setTimeout(function(){w.el.remove();},120);WINS=WINS.filter(function(x){return x!==w;});var t=topWin();if(t)focusWin(t);taskbar();}
+function minWin(w){w.el.classList.add('hid');w.el.classList.remove('act');var t=topWin();if(t)focusWin(t);taskbar();}
+function toggleMax(w){w.pre=null;w.el.classList.toggle('max');}
+function topWin(){var v=WINS.filter(function(x){return onDesk(x)&&!x.el.classList.contains('hid');});v.sort(function(a,b){return (+b.el.style.zIndex)-(+a.el.style.zIndex);});return v[0];}
+function remember(w){if(w.el.classList.contains('max')||w.pre)return;D.winpos[w.id]=[w.el.offsetLeft,w.el.offsetTop,w.el.offsetWidth,w.el.offsetHeight];save();}
+function snapTo(w,z){var A=WA(),el=w.el;if(!w.pre&&!el.classList.contains('max'))w.pre=[el.offsetLeft,el.offsetTop,el.offsetWidth,el.offsetHeight];el.classList.remove('max','hid');el.style.left=Math.round(z[0]*A.w)+'px';el.style.top=Math.round(z[1]*A.h)+'px';el.style.width=Math.round(z[2]*A.w)+'px';el.style.height=Math.round(z[3]*A.h)+'px';focusWin(w);}
+var SNAPL=[[[0,0,.5,1],[.5,0,.5,1]],[[0,0,2/3,1],[2/3,0,1/3,1]],[[0,0,1/3,1],[1/3,0,1/3,1],[2/3,0,1/3,1]],[[0,0,.5,1],[.5,0,.5,.5],[.5,.5,.5,.5]],[[0,0,.5,.5],[.5,0,.5,.5],[0,.5,.5,.5],[.5,.5,.5,.5]]];
+function snapFly(w,btn){closePanels('sf');var f=$('#sf');f.innerHTML=SNAPL.map(function(L,li){return '<div class="sfl">'+L.map(function(z,zi){return '<button data-l="'+li+'" data-z="'+zi+'" style="left:'+(z[0]*100)+'%;top:'+(z[1]*100)+'%;width:calc('+(z[2]*100)+'% - 3px);height:calc('+(z[3]*100)+'% - 3px)" title="Placer ici"></button>';}).join('')+'</div>';}).join('');
+ f.classList.add('on');var r=btn.getBoundingClientRect();f.style.left=Math.max(6,Math.min(r.right-f.offsetWidth,innerWidth-f.offsetWidth-6))+'px';f.style.top=(r.bottom+4)+'px';
+ $$('button',f).forEach(function(b){b.onclick=function(){var L=SNAPL[+b.dataset.l],zi=+b.dataset.z;f.classList.remove('on');snapTo(w,L[zi]);var m={};m[zi]=w;snapAssist(L,m);};});}
+var SA=null;
+function snapAssist(L,used){var free=[];L.forEach(function(z,i){if(!used[i])free.push(i);});var placed=Object.keys(used).map(function(k){return used[k];});var cand=WINS.filter(function(w){return onDesk(w)&&placed.indexOf(w)<0;});var s=$('#sa');
+ if(!free.length||!cand.length){s.classList.remove('on');SA=null;return;}SA={L:L,used:used};var z=L[free[0]],A=WA();s.style.left=(z[0]*A.w+6)+'px';s.style.top=(z[1]*A.h+6)+'px';s.style.width=(z[2]*A.w-12)+'px';s.style.height=(z[3]*A.h-12)+'px';
+ s.innerHTML='<p>Choisissez une fenêtre pour cet espace</p>'+cand.map(function(w,i){return '<button class="tvc" data-i="'+i+'"><div class="h"><span>'+w.ic+'</span><b>'+esc(w.title)+'</b></div><div class="p">'+w.ic+'</div></button>';}).join('');s.classList.add('on');
+ $$('[data-i]',s).forEach(function(b){b.onclick=function(){var w=cand[+b.dataset.i];snapTo(w,z);used[free[0]]=w;snapAssist(L,used);};});}
+function dragWin(w){var el=w.el,t=$('.wt',el),r=$('.wr',el),st=null,lastTap=0;
+ var ZONES={l:[0,0,.5,1],r:[.5,0,.5,1],tl:[0,0,.5,.5],tr:[.5,0,.5,.5],bl:[0,.5,.5,.5],br:[.5,.5,.5,.5]};
+ t.addEventListener('pointerdown',function(e){if(e.target.closest('button'))return;var now=Date.now();if(now-lastTap<(D.dbl||400)){toggleMax(w);lastTap=0;return;}lastTap=now;st={x:e.clientX,y:e.clientY,l:el.offsetLeft,t:el.offsetTop,m:'move',fresh:true};try{t.setPointerCapture(e.pointerId);}catch(_){}});
+ r.addEventListener('pointerdown',function(e){e.stopPropagation();if(el.classList.contains('max'))return;st={x:e.clientX,y:e.clientY,w:el.offsetWidth,h:el.offsetHeight,m:'size'};w.pre=null;try{r.setPointerCapture(e.pointerId);}catch(_){}});
+ var mv=function(e){if(!st)return;var dx=e.clientX-st.x,dy=e.clientY-st.y,S2=$('#snap');
+  if(st.m==='move'){if(st.fresh){if(Math.hypot(dx,dy)<6)return;st.fresh=false;
+    if(el.classList.contains('max')||w.pre){var ratio=(st.x-el.getBoundingClientRect().left)/el.offsetWidth;el.classList.remove('max');if(w.pre){el.style.width=w.pre[2]+'px';el.style.height=w.pre[3]+'px';w.pre=null;}st.l=st.x-ratio*el.offsetWidth;st.t=0;}}
+   var L=Math.max(-el.offsetWidth+80,Math.min(innerWidth-80,st.l+dx)),T=Math.max(0,Math.min(innerHeight-90,st.t+dy));el.style.left=L+'px';el.style.top=T+'px';
+   var A=WA(),cx=e.clientX,cy=e.clientY,c=A.h*0.22,z='';if(cx<8)z=cy<c?'tl':cy>A.h-c?'bl':'l';else if(cx>innerWidth-8)z=cy<c?'tr':cy>A.h-c?'br':'r';else if(cy<6)z='t';st.z=z;
+   if(z){var q=z==='t'?[0,0,1,1]:ZONES[z];S2.style.display='block';S2.style.left=(q[0]*A.w+6)+'px';S2.style.top=(q[1]*A.h+6)+'px';S2.style.width=(q[2]*A.w-12)+'px';S2.style.height=(q[3]*A.h-12)+'px';}else S2.style.display='none';}
+  else{el.style.width=Math.max(260,st.w+dx)+'px';el.style.height=Math.max(170,st.h+dy)+'px';}};
+ var up=function(){if(!st)return;$('#snap').style.display='none';var z=st.z,m=st.m;st=null;if(m==='move'&&z){if(z==='t'){w.pre=null;el.classList.add('max');}else{snapTo(w,ZONES[z]);var L=z.length===1?SNAPL[0]:SNAPL[4],idx={l:0,r:1,tl:0,tr:1,bl:2,br:3}[z],u={};u[idx]=w;snapAssist(L,u);}}remember(w);};
+ [t,r].forEach(function(x){x.addEventListener('pointermove',mv);x.addEventListener('pointerup',up);x.addEventListener('pointercancel',up);});}
+function switchDesk(i,quiet){DESK=Math.max(0,Math.min(NDESK-1,i));WINS.forEach(function(w){w.el.classList.toggle('od',w.desk!==DESK);});var t=topWin();if(t)focusWin(t);taskbar();if(!quiet)toast('Bureau '+(DESK+1),1200);}
+function showDesktop(){var v=WINS.filter(function(w){return onDesk(w)&&!w.el.classList.contains('hid');});if(v.length){showDesktop.saved=v;v.forEach(function(w){w.el.classList.add('hid');w.el.classList.remove('act');});}else if(showDesktop.saved){showDesktop.saved.forEach(function(w){if(WINS.indexOf(w)>=0)w.el.classList.remove('hid');});showDesktop.saved=null;var t=topWin();if(t)focusWin(t);}taskbar();}
+
+/* ================== barre des tâches ================== */
+function taskbar(){var b=$('#bApps');if(!b)return;var act=topWin(),ids=(D.pinTask||[]).filter(function(id){return findApp(id);}).slice();
+ WINS.filter(onDesk).forEach(function(w){if(ids.indexOf(w.id)<0)ids.push(w.id);});b.innerHTML='';
+ ids.forEach(function(id){var ws=WINS.filter(function(w){return w.id===id&&onDesk(w);}),a=findApp(id)||{n:ws[0].title,ic:ws[0].ic,c:'#555'},run=ws.length>0,on=ws.indexOf(act)>=0;
+  var k=document.createElement('button');k.className='tbi'+(run?' run':'')+(on?' on':'');k.title=a.n;k.innerHTML='<span class="ti2" style="background:'+(a.c||'#555')+'">'+a.ic+'</span>';
+  k.onclick=function(){if(longJust(k))return;if(!run){launch(id);return;}var w=ws[0];if(w.el.classList.contains('hid'))focusWin(w);else if(w===act)minWin(w);else focusWin(w);};
+  onLong(k,function(x,y){var pin=(D.pinTask||[]).indexOf(id)>=0,it=[];if(findApp(id))it.push([a.ic+'  '+a.n,function(){launch(id);}]);
+   if(findApp(id))it.push([pin?'📌  Désépingler de la barre des tâches':'📌  Épingler à la barre des tâches',function(){togglePin('pinTask',id);}]);
+   if(run){it.push('-');it.push(['✕  Fermer la fenêtre',function(){ws.forEach(closeWin);}]);}ctx(x,y-10-it.length*36,it);});b.appendChild(k);});}
+function togglePin(list,id){var L=D[list]||[];var i=L.indexOf(id);if(i>=0)L.splice(i,1);else L.push(id);D[list]=L;save();taskbar();if($('#start').classList.contains('on'))renderStart($('#sq').value);toast(i>=0?'Désépinglé':'Épinglé ✔',1200);}
+function extOpen(u){var P=CAP();if(P&&P.Browser&&P.Browser.open){P.Browser.open({url:u});return;}window.open(u,'_blank');}
+
+/* ================== panneaux ================== */
+var PANELS=['start','widgets','qs','nc','tv','clip','sf'];
+var PBTN={start:'#bStart',widgets:'#bW',qs:'#bQS',nc:'#tclock',tv:'#bTV'};
+function closePanels(except){PANELS.forEach(function(p){if(p!==except){$('#'+p).classList.remove('on');if(PBTN[p])$(PBTN[p]).classList.remove('open');}});if(except!=='ctx')$('#ctx').style.display='none';$('#bSearch').classList.remove('open');}
+function togglePanel(p,fn){var on=$('#'+p).classList.contains('on');closePanels();if(on)return;fn();$('#'+p).classList.add('on');if(PBTN[p])$(PBTN[p]).classList.add('open');}
+document.addEventListener('pointerdown',function(e){var t=e.target;if(t.closest('.panel,#bar,#ctx,#sa'))return;closePanels();if(!t.closest('#sa')){$('#sa').classList.remove('on');SA=null;}});
+
+/* ---- menu Démarrer (style Windows 11) ---- */
+var SMODE='pin',SKI=-1;
+function openStart(q){closePanels('start');SMODE='pin';$('#start').classList.add('on');$('#bStart').classList.add('open');$('#sq').value=q||'';renderStart(q||'');setTimeout(function(){if(q!==undefined||lastPT==='mouse'||HASKB)$('#sq').focus();},40);}
+function closeStart(){closePanels();}
+function smBtn(a){return '<button class="sm" data-id="'+a.id+'">'+appIcon(a)+esc(a.n)+'</button>';}
+function srow(a,sub,attr){return '<button class="srow" '+(attr||'data-id="'+a.id+'"')+'>'+appIcon(a)+'<div><b>'+esc(a.n)+'</b><small>'+esc(sub||'')+'</small></div></button>';}
+function ago(t){var m=Math.round((Date.now()-t)/60000);if(m<1)return 'À l\'instant';if(m<60)return 'Il y a '+m+' min';var h=Math.round(m/60);if(h<24)return 'Il y a '+h+' h';return new Date(t).toLocaleDateString('fr-FR');}
+function renderStart(q){q=(q||'').trim().toLowerCase();var g=$('#sbody'),h='';
+ if(q){var A=allApps().filter(function(a){return a.n.toLowerCase().indexOf(q)>=0;}),N=[];D.notes.forEach(function(n,i){if(n.t&&n.t.toLowerCase().indexOf(q)>=0)N.push(i);});
+  h+='<div class="sh">Meilleurs résultats</div>'+A.map(function(a){return srow(a,a.sec==='Applis Android'?'Appli Android':'Application');}).join('');
+  if(N.length)h+='<div class="sh">Notes</div>'+N.slice(0,5).map(function(i){return srow({n:(D.notes[i].t.split('\n')[0]||'Note').slice(0,50),ic:'📝',c:'#2f6fed'},'Bloc-notes · '+ago(D.notes[i].at),'data-note="'+i+'"');}).join('');
+  h+='<div class="sh">Internet</div>'+srow({n:'Chercher « '+q+' » sur le web',ic:'🔎',c:'#1a73e8'},'Ouvre le navigateur','data-web="1"');}
+ else if(SMODE==='all'){var L=allApps().slice().sort(function(a,b){return a.n.localeCompare(b.n,'fr');}),cl='';h+='<div class="sh">Toutes les applis<button data-mode="pin">‹ Retour</button></div>';
+  L.forEach(function(a){var l=a.n.normalize('NFD').replace(/[̀-ͯ]/g,'').charAt(0).toUpperCase();if(l!==cl){cl=l;h+='<div class="sletter">'+l+'</div>';}h+=srow(a,a.sec);});}
+ else{var P=(D.pinStart||[]).map(findApp).filter(Boolean);h+='<div class="sh">Épinglées<button data-mode="all">Toutes les applis ›</button></div><div class="sgrid">'+P.map(smBtn).join('')+'</div>';
+  var R=[];(D.recent||[]).forEach(function(id){var a=findApp(id);if(a)R.push(srow(a,'Ouvert récemment'));});D.notes.slice(0,4).forEach(function(n,i){if(n.t)R.push(srow({n:(n.t.split('\n')[0]||'Note').slice(0,40),ic:'📝',c:'#2f6fed'},ago(n.at),'data-note="'+i+'"'));});
+  h+='<div class="sh">Recommandées</div><div class="srec">'+(R.slice(0,6).join('')||'<div class="note" style="padding:8px">Vos applis et notes récentes apparaîtront ici.</div>')+'</div>';}
+ g.innerHTML=h;SKI=q?0:-1;markKb();
+ $$('[data-mode]',g).forEach(function(b){b.onclick=function(){SMODE=b.dataset.mode;renderStart('');};});
+ $$('[data-id]',g).forEach(function(b){b.onclick=function(){if(longJust(b))return;launch(b.dataset.id);};onLong(b,function(x,y){var id=b.dataset.id,ps=(D.pinStart||[]).indexOf(id)>=0,pt=(D.pinTask||[]).indexOf(id)>=0;ctx(x,y,[['▶  Ouvrir',function(){launch(id);}],'-',[ps?'📌  Détacher du menu Démarrer':'📌  Épingler au menu Démarrer',function(){togglePin('pinStart',id);}],[pt?'📌  Désépingler de la barre des tâches':'📌  Épingler à la barre des tâches',function(){togglePin('pinTask',id);}]]);});});
+ $$('[data-note]',g).forEach(function(b){b.onclick=function(){NCUR=+b.dataset.note;launch('notes');if(NW&&NW.render)NW.render();};});
+ var wb=$('[data-web]',g);if(wb)wb.onclick=function(){closePanels();extOpen('https://www.google.com/search?q='+encodeURIComponent(q));};}
+function markKb(){$$('#sbody .sm,#sbody .srow').forEach(function(x,i){x.classList.toggle('kb',i===SKI);});}
+$('#bStart').onclick=function(){$('#start').classList.contains('on')?closePanels():openStart();};
+$('#bSearch').onclick=function(){if($('#start').classList.contains('on')){closePanels();return;}openStart('');$('#bSearch').classList.add('open');};
+$('#sq').addEventListener('input',function(e){renderStart(e.target.value);});
+$('#sq').addEventListener('keydown',function(e){var b=$$('#sbody .sm,#sbody .srow');if(e.key==='ArrowDown'||e.key==='ArrowRight'){e.preventDefault();SKI=Math.min(b.length-1,SKI+1);}else if(e.key==='ArrowUp'||e.key==='ArrowLeft'){e.preventDefault();SKI=Math.max(0,SKI-1);}else if(e.key==='Enter'){e.preventDefault();(b[Math.max(0,SKI)]||{click:function(){}}).click();return;}else return;markKb();});
+$('#sUser').onclick=function(){launch('set');};
+$('#sPow').onclick=function(e){var r=e.currentTarget.getBoundingClientRect();ctx(r.left-150,r.top-160,[['🔒  Verrouiller',function(){closePanels();lockOn();}],['⛶  Plein écran',fullScr],['🔄  Redémarrer Lushi Tab',function(){location.reload();}],'-',['⏻  Éteindre Lushi Tab (retour à Android)',quitLushi]].concat(CAP()?[['🏠  Choisir l\'écran d\'accueil d\'Android',function(){closePanels();CAP().Kiosk.home();}]]:[]));};
+function kioskOn(){var P=CAP();if(P&&D.kiosk!==false)P.Kiosk.pin().catch(function(){});}
+function quitLushi(){closePanels();var P=CAP();if(P){P.Kiosk.quit();return;}try{if(document.fullscreenElement)document.exitFullscreen();}catch(e){}D.autoFull=false;save();toast('Lushi Tab est sorti du plein écran. Le plein écran automatique est désactivé (Paramètres › Personnaliser).',4000);}
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')kioskOn();});
+function fullScr(){closePanels();try{var q=document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();if(q&&q.catch)q.catch(function(){toast('Plein écran refusé ici');});}catch(e){toast('Plein écran non disponible');}}
+
+/* ---- Widgets ---- */
+var WX=null;
+function calHTML(y,m){var f=new Date(y,m,1),st=(f.getDay()+6)%7,n=new Date(y,m+1,0).getDate(),t=new Date(),h='<div class="cal">'+['L','M','M','J','V','S','D'].map(function(x){return '<div class="h">'+x+'</div>';}).join('');for(var i=0;i<st;i++)h+='<div></div>';for(var j=1;j<=n;j++)h+='<div class="'+(j===t.getDate()&&m===t.getMonth()&&y===t.getFullYear()?'td':'')+'">'+j+'</div>';return h+'</div>';}
+function wxIcon(c){return c<=1?'☀️':c<=3?'⛅':c<=48?'🌫️':c<=67?'🌧️':c<=82?'🌦️':'⛈️';}
+function renderWidgets(){var d=new Date(),day=d.toISOString().slice(0,10),tot={};D.caisse.filter(function(x){return x.d===day;}).forEach(function(x){tot[x.cur]=(tot[x.cur]||0)+(x.s==='in'?1:-1)*x.m;});
+ var sp=(+D.spread||0)/100,r=D.rates.CDF||0,dt=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+ var h='<div class="wtop"><div><div class="t">'+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+'</div><div class="note">'+dt.charAt(0).toUpperCase()+dt.slice(1)+'</div></div><button class="btn" id="wset">⚙</button></div><div class="wgrid">'
+  +'<div class="wc2 big" data-open="agenda" style="background:linear-gradient(135deg,#2a6fd6,#5aa7ff);color:#fff;border:0"><h5 style="color:#e8f1ff">Météo · Lubumbashi</h5>'+(WX?'<div style="display:flex;align-items:center;gap:14px"><span style="font-size:46px">'+wxIcon(WX.c)+'</span><span class="v" style="font-size:44px">'+Math.round(WX.t)+'°C</span></div>':'<div class="note" style="color:#e8f1ff">Pas encore de données (connexion Internet nécessaire).</div>')+'</div>'
+  +'<div class="wc2" data-open="change"><h5>💱 Taux du jour</h5><div class="v" style="font-size:22px">1 $ = '+fmtN(r,0)+' FC</div><div class="note">Je vends '+fmtN(r*(1+sp),0)+' · J\'achète '+fmtN(r*(1-sp),0)+'</div></div>'
+  +'<div class="wc2" data-open="caisse"><h5>💵 Caisse du jour</h5>'+(Object.keys(tot).length?Object.keys(tot).map(function(c){return '<div style="font-size:18px"><b>'+fmtN(tot[c],c==='USD'?2:0)+'</b> '+c+'</div>';}).join(''):'<div class="note">Aucune opération aujourd\'hui.</div>')+'</div>'
+  +'<div class="wc2"><h5>📅 '+d.toLocaleDateString('fr-FR',{month:'long',year:'numeric'})+'</h5>'+calHTML(d.getFullYear(),d.getMonth())+'</div>'
+  +'<div class="wc2"><h5>📝 Notes récentes</h5>'+(D.notes.filter(function(n){return n.t;}).slice(0,4).map(function(n){return '<div class="note" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;color:var(--tx);padding:3px 0">• '+esc(n.t.split('\n')[0].slice(0,40))+'</div>';}).join('')||'<div class="note">Aucune note.</div>')+'<button class="btn" data-open="notes" style="margin-top:6px">Ouvrir</button></div>'
+  +'<div class="wc2 big"><h5>🚀 LushiPratique</h5><div class="row">'+['kalamu','plan','shop','site'].map(function(id){var a=findApp(id);return '<button class="btn" data-open="'+id+'">'+a.ic+' '+esc(a.n)+'</button>';}).join('')+'</div></div></div>';
+ var p=$('#widgets');p.innerHTML=h;$$('[data-open]',p).forEach(function(x){x.onclick=function(e){e.stopPropagation();launch(x.dataset.open);};});$('#wset',p).onclick=function(){launch('set');};}
+$('#bW').onclick=function(){togglePanel('widgets',renderWidgets);};
+
+/* ---- Paramètres rapides ---- */
+var BAT=null;
+function renderQS(){var on=navigator.onLine,T=[['net',on?'📶':'🚫',on?'Internet':'Hors ligne',on],['dark','🌙','Mode sombre',D.theme==='dark'],['night','🔆','Éclairage nocturne',!!D.night],['dnd','🔕','Concentration',!!D.dnd],['transp','✨','Transparence',!!D.transp],['kb','⌨️','Clavier '+(LAYOUTS[D.layout]||LAYOUTS.auto).s,false],['clip','📋','Presse-papiers',false],['full','⛶','Plein écran',!!document.fullscreenElement],['lock','🔒','Verrouiller',false]];
+ var p=$('#qs');p.innerHTML='<div class="qgrid">'+T.map(function(t){return '<button class="qt'+(t[3]?' on':'')+'" data-q="'+t[0]+'"><span>'+t[1]+'</span>'+t[2]+'</button>';}).join('')+'</div><div class="qsl"><span>☀️</span><input type="range" id="qbr" min="25" max="100" value="'+(D.bright||100)+'"></div><div class="qfoot"><span>'+(BAT?(BAT.charging?'⚡ ':'🔋 ')+Math.round(BAT.level*100)+' %':'🔋 —')+'</span><button id="qset" title="Tous les paramètres">⚙️</button></div>';
+ $$('[data-q]',p).forEach(function(b){b.onclick=function(){var q=b.dataset.q;if(q==='net'){toast('Le Wi-Fi se gère dans les paramètres d\'Android.');return;}if(q==='dark')D.theme=D.theme==='dark'?'light':'dark';else if(q==='night')D.night=!D.night;else if(q==='dnd'){D.dnd=!D.dnd;toast(D.dnd?'Concentration : notifications masquées':'Notifications réactivées',1600);}else if(q==='transp')D.transp=!D.transp;else if(q==='kb')cycleLayout();else if(q==='clip'){closePanels();openClip();return;}else if(q==='full'){fullScr();return;}else if(q==='lock'){closePanels();lockOn();return;}save();applyLook();renderQS();};});
+ $('#qbr',p).oninput=function(e){D.bright=+e.target.value;applyLook();};$('#qbr',p).onchange=save;$('#qset',p).onclick=function(){launch('set');};}
+$('#bQS').onclick=function(){togglePanel('qs',renderQS);};
+
+/* ---- Centre de notifications + calendrier ---- */
+var NCM=null;
+function notify(t,ic){D.notifs=[{t:t,ic:ic||'🔔',at:Date.now()}].concat(D.notifs||[]).slice(0,30);D.nunread=(D.nunread||0)+1;save();badge();if(!D.dnd)toast(t,4000,true);}
+function badge(){var b=$('#nbadge'),n=D.nunread||0;b.textContent=n>9?'9+':n;b.classList.toggle('on',n>0);}
+function renderNC(){var d=new Date();if(!NCM)NCM=[d.getFullYear(),d.getMonth()];D.nunread=0;save();badge();var N=D.notifs||[];
+ var p=$('#nc');p.innerHTML='<div class="card"><div class="row" style="justify-content:space-between;margin:0 0 8px"><b>Notifications</b><button class="btn" id="ncl">Tout effacer</button></div><div class="nl">'+(N.length?N.map(function(n,i){return '<div class="nitem"><span>'+n.ic+'</span><div>'+esc(n.t)+'<small>'+ago(n.at)+'</small></div><button data-x="'+i+'" title="Ignorer">✕</button></div>';}).join(''):'<div class="note" style="text-align:center;padding:14px">Aucune nouvelle notification</div>')+'</div></div>'
+  +'<div class="card"><div style="font-weight:600;margin-bottom:8px">'+(function(){var s=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});return s.charAt(0).toUpperCase()+s.slice(1);})()+'</div><div class="row" style="margin:0 0 6px"><b style="flex:1">'+new Date(NCM[0],NCM[1],1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'})+'</b><button class="btn" data-m="-1">▲</button><button class="btn" data-m="1">▼</button></div>'+calHTML(NCM[0],NCM[1])+'</div>';
+ $('#ncl',p).onclick=function(){D.notifs=[];save();renderNC();};$$('[data-x]',p).forEach(function(b){b.onclick=function(){D.notifs.splice(+b.dataset.x,1);save();renderNC();};});
+ $$('[data-m]',p).forEach(function(b){b.onclick=function(){NCM[1]+=+b.dataset.m;if(NCM[1]<0){NCM[1]=11;NCM[0]--;}if(NCM[1]>11){NCM[1]=0;NCM[0]++;}renderNC();};});}
+$('#tclock').onclick=function(){NCM=null;togglePanel('nc',renderNC);};
+
+/* ---- Vue des tâches + bureaux virtuels ---- */
+function renderTV(){var p=$('#tv'),L=WINS.filter(onDesk);
+ p.innerHTML='<div class="tvw">'+(L.length?L.map(function(w,i){return '<div class="tvc" data-i="'+i+'" role="button"><div class="h"><span>'+w.ic+'</span><b>'+esc(w.title)+'</b><button data-c="'+i+'" title="Fermer">✕</button></div><div class="p">'+w.ic+'</div></div>';}).join(''):'<div style="color:#fff;text-shadow:0 1px 3px #000">Aucune fenêtre ouverte sur ce bureau</div>')+'</div>'
+  +'<div class="tvd">'+Array.apply(null,{length:NDESK}).map(function(_,i){var n=WINS.filter(function(w){return w.desk===i;}).length;return '<button data-d="'+i+'" class="'+(i===DESK?'on':'')+'">Bureau '+(i+1)+'<br><small>'+n+' fenêtre'+(n>1?'s':'')+'</small>'+(NDESK>1?'<i data-rd="'+i+'" title="Supprimer ce bureau">✕</i>':'')+'</button>';}).join('')+(NDESK<6?'<button class="add" id="tvadd">＋ Nouveau bureau</button>':'')+'</div>';
+ $$('.tvc',p).forEach(function(c){var w=L[+c.dataset.i];c.onclick=function(e){if(e.target.dataset.c!=null){closeWin(w);renderTV();return;}closePanels();focusWin(w);};
+  onLong(c,function(x,y){var it=[];for(var i=0;i<NDESK;i++)if(i!==DESK)(function(i){it.push(['➡  Déplacer vers Bureau '+(i+1),function(){w.desk=i;w.el.classList.add('od');taskbar();renderTV();}]);})(i);if(it.length)ctx(x,y,it);});});
+ $$('[data-d]',p).forEach(function(b){b.onclick=function(e){var rd=e.target.dataset.rd;if(rd!=null){var k=+rd;WINS.forEach(function(w){if(w.desk===k)w.desk=Math.max(0,k-1);else if(w.desk>k)w.desk--;});NDESK--;D.ndesk=NDESK;save();switchDesk(Math.min(DESK,NDESK-1),1);renderTV();return;}switchDesk(+b.dataset.d,1);renderTV();};});
+ var ad=$('#tvadd',p);if(ad)ad.onclick=function(){NDESK++;D.ndesk=NDESK;save();switchDesk(NDESK-1,1);renderTV();};}
+$('#bTV').onclick=function(){togglePanel('tv',renderTV);};
+$('#bShow').onclick=showDesktop;
+
+/* ---- Historique du presse-papiers ---- */
+function addClip(t){t=String(t||'');if(!t.trim())return;D.clips=[t].concat((D.clips||[]).filter(function(x){return x!==t;})).slice(0,20);save();}
+document.addEventListener('copy',function(){var a=document.activeElement,t='';if(a&&(a.tagName==='TEXTAREA'||a.tagName==='INPUT')&&a.selectionStart!=null)t=a.value.substring(a.selectionStart,a.selectionEnd);else t=String(getSelection());addClip(t);});
+document.addEventListener('cut',function(){var a=document.activeElement;if(a&&a.selectionStart!=null)addClip(a.value.substring(a.selectionStart,a.selectionEnd));});
+function openClip(){closePanels('clip');var p=$('#clip'),C=D.clips||[];p.innerHTML='<div class="row" style="justify-content:space-between;margin:0 0 8px"><b>📋 Presse-papiers</b><button class="btn" id="clx">Tout effacer</button></div><div class="cl">'+(C.length?C.map(function(t,i){return '<button class="cli" data-i="'+i+'">'+esc(t.slice(0,300))+'</button>';}).join(''):'<div class="note" style="padding:10px;text-align:center">Rien pour l\'instant. Ce que vous copiez apparaîtra ici.</div>')+'</div><div class="note" style="margin-top:8px">Touchez un élément pour le coller dans la dernière zone de texte utilisée.</div>';p.classList.add('on');
+ $('#clx',p).onclick=function(){D.clips=[];save();openClip();};$$('[data-i]',p).forEach(function(b){b.addEventListener('pointerdown',function(e){e.preventDefault();});b.onclick=function(){var t=C[+b.dataset.i];closePanels();if(LASTED&&document.contains(LASTED)){LASTED.focus();insertText(LASTED,t);toast('Collé ✔',1000);}else{copyT(t);}};});}
+
+/* ---- Alt+Tab ---- */
+var AT=null;
+function altTab(back){var L=WINS.filter(onDesk).sort(function(a,b){return (+b.el.style.zIndex)-(+a.el.style.zIndex);});if(!L.length)return;if(!AT)AT={L:L,i:0};AT.i=(AT.i+(back?-1:1)+AT.L.length)%AT.L.length;var p=$('#at');
+ p.innerHTML=AT.L.map(function(w,i){return '<div class="tvc'+(i===AT.i?' sel':'')+'" data-i="'+i+'"><div class="h"><span>'+w.ic+'</span><b>'+esc(w.title)+'</b></div><div class="p">'+w.ic+'</div></div>';}).join('');p.classList.add('on');
+ $$('[data-i]',p).forEach(function(c){c.onclick=function(){AT.i=+c.dataset.i;endAltTab();};});}
+function endAltTab(){if(!AT)return;var w=AT.L[AT.i];AT=null;$('#at').classList.remove('on');if(w)focusWin(w);}
+document.addEventListener('keyup',function(e){if(AT&&(e.key==='Alt'||!e.altKey))endAltTab();});
+
+/* ================== menu contextuel ================== */
+function ctx(x,y,items){var c=$('#ctx');c.innerHTML='';items.forEach(function(it){if(it==='-'){c.appendChild(document.createElement('hr'));return;}var b=document.createElement('button');b.textContent=it[0];b.onclick=function(){c.style.display='none';it[1]();};c.appendChild(b);});c.style.display='block';c.style.left=Math.max(4,Math.min(x,innerWidth-c.offsetWidth-6))+'px';c.style.top=Math.max(4,Math.min(y,innerHeight-c.offsetHeight-6))+'px';}
+
+/* ================== bureau ================== */
+function desktop(){var c=$('#icons');c.innerHTML='';var L=['files','notes','calc','change','caisse','plan','kalamu','shop','web','set'];allApps().filter(function(a){return L.indexOf(a.id)>=0||a.pkg==='com.whatsapp';}).forEach(function(a){var d=document.createElement('div');d.className='di';d.innerHTML=appIcon(a)+'<span>'+esc(a.n)+'</span>';
+ var lt=0;d.addEventListener('pointerdown',function(e){$$('.di').forEach(function(x){x.classList.remove('sel');});d.classList.add('sel');if(e.pointerType!=='mouse'){return;}var n=Date.now();if(n-lt<(D.dbl||400)){launch(a.id);lt=0;}else lt=n;});
+ d.addEventListener('click',function(e){if(e.pointerType==='mouse'||(e.detail&&lastPT==='mouse'))return;launch(a.id);});c.appendChild(d);});}
+var lastPT='touch';window.addEventListener('pointerdown',function(e){lastPT=e.pointerType;},true);
+$('#desk').addEventListener('contextmenu',function(e){if(e.target.closest('.win'))return;e.preventDefault();ctx(e.clientX,e.clientY,[['📝  Nouvelle note',function(){launch('notes');setTimeout(function(){newNote();},50);}],['📁  Explorateur de fichiers',function(){launch('files');}],['🧮  Calculatrice',function(){launch('calc');}],'-',['🖼️  Fond d\'écran suivant',function(){D.wall=(D.wall+1)%WALLS.length;save();applyLook();}],['🎨  Personnaliser',function(){SETTAB='ec';launch('set');if(SETW&&SETW.render){SETW.tab='ec';SETW.render();}}],['🗂️  Vue des tâches',function(){togglePanel('tv',renderTV);}],['🔄  Actualiser',function(){location.reload();}]]);});
+var lp=null;$('#desk').addEventListener('pointerdown',function(e){if(e.pointerType==='mouse'||e.target.closest('.win,.di'))return;var x=e.clientX,y=e.clientY;lp=setTimeout(function(){$('#desk').dispatchEvent(new MouseEvent('contextmenu',{clientX:x,clientY:y,bubbles:true}));},650);});['pointerup','pointermove','pointercancel'].forEach(function(t){$('#desk').addEventListener(t,function(){clearTimeout(lp);});});
+var SETTAB=null;
+
+/* ================== raccourcis clavier (comme sur PC) ================== */
+var HASKB=false,META=false;
+function winKey(k,e){/* touche Windows (ou Ctrl+Alt) + lettre */var A=topWin(),c=k.toLowerCase();
+ if(k==='ArrowLeft'&&A){snapTo(A,SNAPL[0][0]);return true;}if(k==='ArrowRight'&&A){snapTo(A,SNAPL[0][1]);return true;}if(k==='ArrowUp'&&A){A.pre=null;A.el.classList.add('max');return true;}if(k==='ArrowDown'&&A){if(A.el.classList.contains('max')||A.pre){A.el.classList.remove('max');if(A.pre){A.el.style.left=A.pre[0]+'px';A.el.style.top=A.pre[1]+'px';A.el.style.width=A.pre[2]+'px';A.el.style.height=A.pre[3]+'px';A.pre=null;}}else minWin(A);return true;}
+ if(c==='d'){showDesktop();return true;}if(c==='a'){togglePanel('qs',renderQS);return true;}if(c==='n'){NCM=null;togglePanel('nc',renderNC);return true;}if(c==='w'){togglePanel('widgets',renderWidgets);return true;}if(c==='v'){$('#clip').classList.contains('on')?closePanels():openClip();return true;}
+ if(c==='e'){launch('files');return true;}if(c==='s'){openStart('');return true;}if(c==='i'){launch('set');return true;}if(c==='l'){lockOn();return true;}if(c==='t'&&e.ctrlKey&&e.altKey){launch('notes');return true;}if(k==='Tab'){togglePanel('tv',renderTV);return true;}if(c==='z'&&A){snapFly(A,$('[data-a=max]',A.el));return true;}return false;}
+function globalKeys(e,ed){HASKB=true;var k=e.key;
+ if(k==='Meta'||k==='OS'){META=true;e.preventDefault();return;}
+ if(e.metaKey){META=false;if(e.ctrlKey&&(k==='ArrowRight'||k==='ArrowLeft')){e.preventDefault();switchDesk(DESK+(k==='ArrowRight'?1:-1));return;}if(winKey(k,e)){e.preventDefault();}return;}
+ if(e.ctrlKey&&k==='Escape'){e.preventDefault();$('#start').classList.contains('on')?closePanels():openStart();return;}
+ if(k==='Escape'){if(AT){AT=null;$('#at').classList.remove('on');return;}if($('#ctx').style.display==='block'||$$('.panel.on').length||$('#sa').classList.contains('on')){closePanels();$('#sa').classList.remove('on');return;}}
+ if(e.altKey&&k==='Tab'&&!e.ctrlKey){e.preventDefault();altTab(e.shiftKey);return;}
+ if(e.ctrlKey&&(k==='w'||k==='W')&&!e.altKey){var t=topWin();if(t){e.preventDefault();closeWin(t);}return;}
+ if(e.ctrlKey&&e.altKey&&!e.shiftKey){if(winKey(k,e)){e.preventDefault();return;}}
+ if(e.key==='F11'){e.preventDefault();fullScr();return;}
+ if(!ed&&!e.ctrlKey&&!e.altKey&&!e.metaKey&&k.length===1&&!$('#start').classList.contains('on')&&!topWin()&&!$('#lock').classList.contains('on')){openStart('');}}
+document.addEventListener('keyup',function(e){if((e.key==='Meta'||e.key==='OS')&&META){META=false;$('#start').classList.contains('on')?closePanels():openStart();}});
+
+/* ================== verrouillage, horloge, batterie, météo ================== */
+function lockOn(){$('#lock').classList.add('on');tick();}
+$('#lock').addEventListener('pointerdown',function(){$('#lock').classList.remove('on');});document.addEventListener('keydown',function(e){if($('#lock').classList.contains('on')){e.preventDefault();$('#lock').classList.remove('on');}},true);
+function tick(){var d=new Date(),hm=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2),dt=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});dt=dt.charAt(0).toUpperCase()+dt.slice(1);$('#ct').textContent=hm;$('#cd').textContent=dt;$('#tt').textContent=hm;$('#td').textContent=d.toLocaleDateString('fr-FR');$('#lt').textContent=hm;$('#ld').textContent=dt;
+ $('#tnet').textContent=navigator.onLine?'📶':'🚫';$('#bQS').title=(navigator.onLine?'Internet connecté':'Hors ligne')+' — Paramètres rapides (Ctrl+Alt+A)';}
+setInterval(tick,5000);
+try{if(navigator.getBattery)navigator.getBattery().then(function(b){var low=false;var u=function(){BAT=b;$('#tbat').textContent=(b.charging?'⚡':'🔋')+Math.round(b.level*100)+'%';if(!b.charging&&b.level<=0.15&&!low){low=true;notify('Batterie faible : '+Math.round(b.level*100)+' %. Branchez le chargeur.','🪫');}if(b.charging)low=false;};u();b.addEventListener('levelchange',u);b.addEventListener('chargingchange',u);});}catch(e){}
+function weather(){var c=null;try{c=JSON.parse(localStorage.getItem('lushitab_meteo')||'null');}catch(e){}var show=function(w){if(!w)return;WX=w;$('#cw').textContent=wxIcon(w.c)+' '+Math.round(w.t)+'°C · Lubumbashi';$('#bWi').textContent=wxIcon(w.c);$('#bWt').textContent=Math.round(w.t)+'°C';};show(c&&c.w);
+ if(!navigator.onLine||(c&&Date.now()-c.at<30*60000))return;fetch('https://api.open-meteo.com/v1/forecast?latitude=-11.66&longitude=27.48&current=temperature_2m,weather_code&timezone=auto').then(function(r){return r.json();}).then(function(j){var w={t:j.current.temperature_2m,c:j.current.weather_code};show(w);try{localStorage.setItem('lushitab_meteo',JSON.stringify({at:Date.now(),w:w}));}catch(e){}}).catch(function(){});}
+$('#bKb').onclick=function(){cycleLayout();};$('#bKb').oncontextmenu=function(e){e.preventDefault();launch('set');};
+
+/* ================== Explorateur de fichiers + visionneuse ================== */
+var FILES=[],VN=0;
+function fIcon(t){return /^image/.test(t)?'🖼️':/^video/.test(t)?'🎬':/^audio/.test(t)?'🎵':/pdf/.test(t)?'📕':/^text|json/.test(t)?'📄':'📦';}
+function fSize(n){return n<1024?n+' o':n<1048576?(n/1024).toFixed(0)+' Ko':(n/1048576).toFixed(1)+' Mo';}
+function viewFile(f){VN++;var u=URL.createObjectURL(f);openWin('v'+VN,f.name,fIcon(f.type),function(b,w){w.onclose=function(){URL.revokeObjectURL(u);};var t=f.type||'';
+ if(/^image/.test(t)){b.style.cssText='padding:0;display:flex;align-items:center;justify-content:center;background:#111';b.innerHTML='<img src="'+u+'" style="max-width:100%;max-height:100%;object-fit:contain">';}
+ else if(/^video/.test(t)){b.style.cssText='padding:0;background:#000';b.innerHTML='<video src="'+u+'" controls autoplay style="width:100%;height:100%"></video>';}
+ else if(/^audio/.test(t)){b.innerHTML='<div style="text-align:center;font-size:60px;margin:20px 0">🎵</div><audio src="'+u+'" controls autoplay style="width:100%"></audio>';}
+ else if(/pdf/.test(t)){b.style.padding='0';b.innerHTML='<iframe src="'+u+'"></iframe>';}
+ else if(/^text|json|xml|csv/.test(t)||/\.(txt|md|csv|json|html?)$/i.test(f.name)){b.style.cssText='padding:0;display:flex';var ta=document.createElement('textarea');ta.style.cssText='flex:1;border:0;outline:0;resize:none;padding:12px;background:var(--card);font-family:monospace';ta.readOnly=true;b.appendChild(ta);f.text().then(function(x){ta.value=x;});}
+ else b.innerHTML='<div style="text-align:center;font-size:60px;margin:20px 0">📦</div><div class="note" style="text-align:center">'+esc(f.name)+' · '+fSize(f.size)+'<br>Ce type de fichier ne peut pas être affiché ici.</div>';},{multi:true,w:Math.min(900,innerWidth-40),h:Math.min(620,innerHeight-90)});}
+APPF.files=function(){openWin('files','Explorateur de fichiers','📁',function(b,w){var sec=w.sec||'home',q='';b.style.cssText='padding:0;display:flex;flex-direction:column;overflow:hidden';
+ w.render=function(){var S=[['home','🏠','Accueil'],['notes','📝','Notes'],['caisse','💵','Caisse'],['dev','💾','Cette tablette']],P={home:'Accueil',notes:'Accueil › Notes',caisse:'Accueil › Caisse',dev:'Cette tablette'}[sec];
+  var h='<div class="fbar"><button class="btn" data-go="home" title="Accueil">🏠</button><div class="inp" style="flex:1;border-bottom-color:var(--ln)">📁 '+P+'</div><input class="inp" id="fq" placeholder="🔍 Rechercher" value="'+esc(q)+'" style="width:160px"></div><div class="fx"><div class="fside">'+S.map(function(s){return '<button data-go="'+s[0]+'" class="'+(s[0]===sec?'on':'')+'">'+s[1]+' '+s[2]+'</button>';}).join('')+'</div><div class="fmain">';
+  var notes=D.notes.map(function(n,i){return {i:i,n:(n.t.split('\n')[0]||'Note sans titre').slice(0,40)+'.txt',at:n.at,sz:n.t.length};}).filter(function(x){return !q||x.n.toLowerCase().indexOf(q)>=0;});
+  var days={};D.caisse.forEach(function(x){days[x.d]=(days[x.d]||0)+1;});
+  if(sec==='home'){h+='<h4>Accès rapide</h4><div class="fgrid">'+S.slice(1).map(function(s){return '<button class="fi" data-go="'+s[0]+'"><span class="e">'+s[1]+'</span>'+s[2]+'</button>';}).join('')+'</div><h4>Ouverts récemment</h4>'+(FILES.length?'<div class="fgrid">'+FILES.map(function(f,i){return '<button class="fi" data-f="'+i+'"><span class="e">'+fIcon(f.type)+'</span>'+esc(f.name)+'</button>';}).join('')+'</div>':'<div class="note">Les fichiers de la tablette que vous ouvrez apparaîtront ici.</div>')+'<h4>Notes récentes</h4><div class="fgrid">'+notes.slice(0,6).map(function(x){return '<button class="fi" data-n="'+x.i+'"><span class="e">📄</span>'+esc(x.n)+'</button>';}).join('')+'</div>';}
+  else if(sec==='notes'){h+='<div class="row"><button class="btn p" id="fnew">＋ Nouvelle note</button><button class="btn" id="fexp">💾 Tout exporter (.txt)</button></div><table><tr><th>Nom</th><th>Modifié</th><th class="num">Taille</th><th></th></tr>'+notes.map(function(x){return '<tr><td><a href="#" data-n="'+x.i+'" style="color:inherit">📄 '+esc(x.n)+'</a></td><td class="note">'+ago(x.at)+'</td><td class="num note">'+fSize(x.sz)+'</td><td><button class="btn" data-dl="'+x.i+'" style="padding:2px 8px" title="Télécharger">⬇</button></td></tr>';}).join('')+'</table>';}
+  else if(sec==='caisse'){var K=Object.keys(days).sort().reverse();h+=K.length?'<table><tr><th>Journée</th><th class="num">Opérations</th></tr>'+K.map(function(k){return '<tr><td><a href="#" data-cs="1" style="color:inherit">💵 Caisse du '+k+'</a></td><td class="num">'+days[k]+'</td></tr>';}).join('')+'</table>':'<div class="note">Aucune opération enregistrée.</div>';}
+  else{h+='<div class="note">Pour la sécurité, une page web ne peut pas parcourir tous les dossiers de la tablette. Choisissez un ou plusieurs fichiers (photos, vidéos, PDF, textes…) pour les ouvrir ici.</div><div class="row"><button class="btn p" id="fpick">📂 Ouvrir des fichiers…</button><input type="file" id="ffile" multiple style="display:none"></div>'+(FILES.length?'<h4>Ouverts pendant cette session</h4><table>'+FILES.map(function(f,i){return '<tr><td><a href="#" data-f="'+i+'" style="color:inherit">'+fIcon(f.type)+' '+esc(f.name)+'</a></td><td class="num note">'+fSize(f.size)+'</td></tr>';}).join('')+'</table>':'');}
+  b.innerHTML=h+'</div></div>';
+  $$('[data-go]',b).forEach(function(x){x.onclick=function(){sec=w.sec=x.dataset.go;w.render();};});
+  var fq=$('#fq',b);fq.oninput=function(){q=fq.value.toLowerCase();var p=fq.selectionStart;w.render();var n=$('#fq',b);n.focus();n.setSelectionRange(p,p);};
+  $$('[data-n]',b).forEach(function(x){x.onclick=function(e){e.preventDefault();NCUR=+x.dataset.n;launch('notes');if(NW&&NW.render)NW.render();};});
+  $$('[data-f]',b).forEach(function(x){x.onclick=function(e){e.preventDefault();viewFile(FILES[+x.dataset.f]);};});
+  $$('[data-cs]',b).forEach(function(x){x.onclick=function(e){e.preventDefault();launch('caisse');};});
+  var dl=function(name,txt){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain;charset=utf-8'}));a.download=name;document.body.appendChild(a);a.click();a.remove();};
+  $$('[data-dl]',b).forEach(function(x){x.onclick=function(){var n=D.notes[+x.dataset.dl];dl(((n.t.split('\n')[0]||'note').slice(0,30).replace(/[\\\/:*?"<>|]+/g,'-'))+'.txt',n.t);};});
+  var fn=$('#fnew',b);if(fn)fn.onclick=function(){newNote();launch('notes');};var fe=$('#fexp',b);if(fe)fe.onclick=function(){dl('mes-notes.txt',D.notes.map(function(n){return n.t;}).join('\n\n———\n\n'));};
+  var fp=$('#fpick',b);if(fp){fp.onclick=function(){$('#ffile',b).click();};$('#ffile',b).onchange=function(e){[].slice.call(e.target.files).forEach(function(f){FILES.unshift(f);viewFile(f);});FILES=FILES.slice(0,20);w.render();};}};w.render();},{w:820,h:520});};
+
+
+/* ================== les applis intégrées ================== */
+
+var ACC=['é','è','ê','à','â','ç','ù','û','î','ï','ô','ë','œ','É','È','À','Ç','«','»','€','°','…'];
+function accBar(ta){var d=document.createElement('div');d.className='accbar';d.innerHTML=ACC.map(function(c){return '<button tabindex="-1">'+c+'</button>';}).join('');$$('button',d).forEach(function(b){b.addEventListener('pointerdown',function(e){e.preventDefault();insertText(ta,b.textContent);ta.focus();});});return d;}
+/* Bloc-notes */
+var NW=null,NCUR=0;
+function newNote(){D.notes.unshift({t:'',at:Date.now()});NCUR=0;save();if(NW)NW.render();}
+APPF.notes=function(){NW=openWin('notes','Bloc-notes','📝',function(b,w){b.style.cssText='padding:0;display:flex;overflow:hidden';
+ w.render=function(){if(!D.notes.length)D.notes.push({t:'',at:Date.now()});NCUR=Math.min(NCUR,D.notes.length-1);
+  b.innerHTML='<div class="nlist"></div><div class="ned"><div class="row" style="padding:6px 8px;margin:0;border-bottom:1px solid var(--ln)"><button class="btn p" data-n="new">＋ Nouvelle</button><button class="btn" data-n="copy">Copier</button><button class="btn" data-n="wa">WhatsApp</button><button class="btn d" data-n="del">🗑</button><span class="note" data-n="cnt" style="margin-left:auto"></span></div><textarea spellcheck="true" placeholder="Écris ici… (clavier : '+esc(LAYOUTS[D.layout].n)+')"></textarea></div>';
+  var L=$('.nlist',b),ta=$('textarea',b),cnt=$('[data-n=cnt]',b);D.notes.forEach(function(n,i){var d=document.createElement('div');d.className=i===NCUR?'on':'';d.setAttribute('data-click','1');d.textContent=(n.t.split('\n')[0]||'Nouvelle note').slice(0,40);d.onclick=function(){NCUR=i;w.render();};L.appendChild(d);});
+  ta.value=D.notes[NCUR].t;var up=function(){cnt.textContent=ta.value.trim()?ta.value.trim().split(/\s+/).length+' mots':'';};up();
+  ta.addEventListener('input',function(){D.notes[NCUR].t=ta.value;D.notes[NCUR].at=Date.now();save();up();var f=L.children[NCUR];if(f)f.textContent=(ta.value.split('\n')[0]||'Nouvelle note').slice(0,40);});
+  $('.ned',b).appendChild(accBar(ta));
+  $('[data-n=new]',b).onclick=function(){newNote();};$('[data-n=copy]',b).onclick=function(){copyT(ta.value);};$('[data-n=wa]',b).onclick=function(){extOpen('https://wa.me/?text='+encodeURIComponent(ta.value));};
+  $('[data-n=del]',b).onclick=function(){if(!confirm('Effacer cette note ?'))return;D.notes.splice(NCUR,1);save();w.render();};
+  if(lastPT==='mouse'||HASKB)setTimeout(function(){ta.focus();},30);LASTED=ta;};w.render();},{w:760,h:480});};
+function copyT(t){try{navigator.clipboard.writeText(t).then(function(){toast('Copié');},function(){fb();});}catch(e){fb();}function fb(){var x=document.createElement('textarea');x.value=t;document.body.appendChild(x);x.select();try{document.execCommand('copy');toast('Copié');}catch(_){toast('Copie impossible');}x.remove();}}
+/* Calculatrice */
+APPF.calc=function(){openWin('calc','Calculatrice','🧮',function(b,w){var ex='',hist='';b.innerHTML='<div class="cdisp"><div class="h"></div><div class="v">0</div></div><div class="calc"></div><div class="note" style="margin-top:6px">Clavier : chiffres, + − * /, Entrée = résultat, Échap = effacer, % = pourcentage.</div>';
+ var K=['C','⌫','%','÷','7','8','9','×','4','5','6','−','1','2','3','+','±','0',',','='],g=$('.calc',b);K.forEach(function(k){var x=document.createElement('button');x.textContent=k;if('÷×−+'.indexOf(k)>=0)x.className='o';if(k==='=')x.className='eq';x.onclick=function(){press(k);};g.appendChild(x);});
+ function show(){$('.v',b).textContent=ex===''?'0':ex.replace(/\*/g,'×').replace(/\//g,'÷').replace(/-/g,'−').replace(/\./g,',');$('.h',b).textContent=hist;}
+ function evalE(s){if(!/^[\d+\-*/().%\s]+$/.test(s))throw 0;s=s.replace(/(\d+(?:\.\d+)?)%/g,'($1/100)');return Function('"use strict";return ('+s+')')();}
+ function press(k){if(k==='C'){ex='';hist='';}else if(k==='⌫')ex=ex.slice(0,-1);else if(k==='='){try{var r=evalE(ex);hist=ex.replace(/\./g,',')+' =';ex=String(Math.round(r*1e10)/1e10);}catch(e){hist='Erreur';}}else if(k==='±'){ex=ex?(ex.charAt(0)==='-'?ex.slice(1):'-'+ex):'';}else ex+=({'÷':'/','×':'*','−':'-',',':'.'}[k]||k);show();}
+ w.key=function(e){var m={'Enter':'=','=':'=','Escape':'C','Backspace':'⌫','*':'×','/':'÷','-':'−','+':'+',',':',','.':',','%':'%'};var k=m[e.key]||(/^\d$/.test(e.key)?e.key:null);if(k){e.preventDefault();press(k);}};show();},{w:340,h:470});};
+/* Clavier à l'écran AZERTY */
+var LASTED=null;document.addEventListener('focusin',function(e){var t=e.target;if(t&&(t.tagName==='TEXTAREA'||(t.tagName==='INPUT'&&/^(text|search|number|)$/.test(t.type||''))))LASTED=t;});
+APPF.osk=function(){openWin('osk','Clavier à l\'écran — AZERTY','⌨️',function(b){var shift=false,num=false;
+ var R1='azertyuiop',R2='qsdfghjklm',R3='wxcvbn',N1='1234567890',N2='@#€&-+()/',N3='*"\':;!?';
+ function draw(){var rows=num?[N1.split(''),N2.split(''),N3.split('')]:[R1.split(''),R2.split(''),R3.split('').concat(["'"])];var h='<div class="osk">';rows.forEach(function(r,i){h+='<div class="r">'+(i===2?'<button class="w2'+(shift?' on':'')+'" data-k="SHIFT">⇧</button>':'')+r.map(function(c){var v=shift?c.toUpperCase():c;return '<button data-k="'+esc(v)+'">'+esc(v)+'</button>';}).join('')+(i===2?'<button class="w2" data-k="BK">⌫</button>':'')+'</div>';});
+  h+='<div class="r"><button class="w2" data-k="NUM">'+(num?'ABC':'?123')+'</button><button data-k="é">é</button><button data-k="è">è</button><button data-k="à">à</button><button class="sp" data-k=" ">espace</button><button data-k="ç">ç</button><button data-k=",">,</button><button data-k=".">.</button><button class="w2" data-k="EN">↵</button></div></div><div class="note" style="margin-top:6px">Le texte va dans la dernière zone où tu as cliqué'+(LASTED?'':' (clique d\'abord dans une note)')+'.</div>';b.innerHTML=h;
+  $$('[data-k]',b).forEach(function(x){x.addEventListener('pointerdown',function(e){e.preventDefault();var k=x.dataset.k,t=LASTED;if(k==='SHIFT'){shift=!shift;draw();return;}if(k==='NUM'){num=!num;draw();return;}if(!t){toast('Clique d\'abord dans une zone de texte');return;}
+   if(k==='BK'){var a=t.selectionStart,z=t.selectionEnd;if(a===z&&a>0)t.setRangeText('',a-1,a,'end');else t.setRangeText('',a,z,'end');t.dispatchEvent(new Event('input',{bubbles:true}));}else insertText(t,k==='EN'?'\n':k);if(shift&&k.length===1){shift=false;draw();}});});}draw();},{w:640,h:320});};
+/* Calendrier */
+APPF.agenda=function(){openWin('agenda','Calendrier','📅',function(b){var d=new Date(),y=d.getFullYear(),m=d.getMonth();function draw(){var f=new Date(y,m,1),st=(f.getDay()+6)%7,n=new Date(y,m+1,0).getDate(),h='<div class="row"><button class="btn" data-m="-1">◀</button><b style="flex:1;text-align:center">'+f.toLocaleDateString('fr-FR',{month:'long',year:'numeric'})+'</b><button class="btn" data-m="1">▶</button></div><div class="cal">'+['L','M','M','J','V','S','D'].map(function(x){return '<div class="h">'+x+'</div>';}).join('');for(var i=0;i<st;i++)h+='<div></div>';var t=new Date();for(var j=1;j<=n;j++)h+='<div class="'+(j===t.getDate()&&m===t.getMonth()&&y===t.getFullYear()?'td':'')+'">'+j+'</div>';b.innerHTML=h+'</div>';$$('[data-m]',b).forEach(function(x){x.onclick=function(){m+=+x.dataset.m;if(m<0){m=11;y--;}if(m>11){m=0;y++;}draw();};});}draw();},{w:330,h:340});};
+/* Change */
+var CUR3={USD:'Dollar US',CDF:'Franc congolais',ZMW:'Kwacha zambien',TZS:'Shilling tanzanien',ZAR:'Rand sud-africain',EUR:'Euro'};
+APPF.change=function(){openWin('change','Change','💱',function(b){function draw(){var o=Object.keys(CUR3).map(function(c){return '<option value="'+c+'">'+c+' — '+CUR3[c]+'</option>';}).join('');
+ b.innerHTML='<div class="row"><input class="inp" id="cv" type="text" inputmode="decimal" value="100" style="width:120px"><select class="inp" id="cf">'+o+'</select><span>→</span><select class="inp" id="ct2">'+o+'</select></div><div style="font-size:26px;font-weight:300;margin:8px 0" id="cr">—</div><div class="note" id="cn"></div>'
+  +'<h4>Taux du jour (pour 1 USD)</h4><table>'+Object.keys(CUR3).filter(function(c){return c!=='USD';}).map(function(c){return '<tr><td>1 USD =</td><td><input class="inp" data-r="'+c+'" type="text" inputmode="decimal" value="'+D.rates[c]+'" style="width:110px"></td><td>'+c+'</td></tr>';}).join('')+'</table><div class="row"><span>Marge achat / vente :</span><input class="inp" id="csp" type="text" inputmode="decimal" value="'+D.spread+'" style="width:70px"><span>%</span></div>';
+ $('#cf',b).value='USD';$('#ct2',b).value='CDF';var calc=function(){var v=parseFloat(String($('#cv',b).value).replace(',','.')),f=$('#cf',b).value,t=$('#ct2',b).value,r=v/D.rates[f]*D.rates[t],sp=(+D.spread||0)/100;$('#cr',b).textContent=fmtN(r,t==='CDF'||t==='TZS'?0:2)+' '+t;$('#cn',b).textContent='Je vends : '+fmtN(r*(1+sp),t==='CDF'||t==='TZS'?0:2)+' '+t+'  ·  J\'achète : '+fmtN(r*(1-sp),t==='CDF'||t==='TZS'?0:2)+' '+t;};
+ ['#cv','#cf','#ct2'].forEach(function(s){$(s,b).addEventListener('input',calc);$(s,b).addEventListener('change',calc);});$$('[data-r]',b).forEach(function(x){x.addEventListener('change',function(){var v=parseFloat(String(x.value).replace(',','.'));if(v>0){D.rates[x.dataset.r]=v;save();calc();toast('Taux enregistré');}});});$('#csp',b).addEventListener('change',function(e){D.spread=parseFloat(String(e.target.value).replace(',','.'))||0;save();calc();});calc();}draw();},{w:460,h:470});};
+/* Caisse du jour */
+APPF.caisse=function(){openWin('caisse','Caisse du jour','💵',function(b){var day=new Date().toISOString().slice(0,10);function draw(){var L=D.caisse.filter(function(x){return x.d===day;}),tot={};L.forEach(function(x){tot[x.cur]=(tot[x.cur]||0)+(x.s==='in'?1:-1)*x.m;});
+ b.innerHTML='<div class="row"><input class="inp" id="kl" placeholder="Libellé (ex : unités Vodacom)" style="flex:1;min-width:140px"><input class="inp" id="km" type="text" inputmode="decimal" placeholder="Montant" style="width:110px"><select class="inp" id="kc"><option>CDF</option><option>USD</option><option>ZMW</option><option>TZS</option></select></div><div class="row"><button class="btn p" data-s="in">＋ Entrée</button><button class="btn" data-s="out">－ Sortie</button><input class="inp" type="date" id="kd" value="'+day+'"><button class="btn" id="kx">Partager</button></div>'
+  +'<h4>Solde du jour</h4><div>'+(Object.keys(tot).length?Object.keys(tot).map(function(c){return '<span class="chip" style="font-size:14px"><b>'+fmtN(tot[c],c==='USD'?2:0)+'</b> '+c+'</span>';}).join(''):'<span class="note">Aucune opération ce jour.</span>')+'</div>'
+  +'<table style="margin-top:8px"><tr><th>Heure</th><th>Libellé</th><th class="num">Montant</th><th></th></tr>'+L.slice().reverse().map(function(x){return '<tr><td>'+x.h+'</td><td>'+esc(x.l)+'</td><td class="num" style="color:'+(x.s==='in'?'var(--ok)':'var(--bad)')+'">'+(x.s==='in'?'+':'−')+fmtN(x.m,x.cur==='USD'?2:0)+' '+x.cur+'</td><td><button class="btn d" data-del="'+D.caisse.indexOf(x)+'" style="padding:2px 8px">✕</button></td></tr>';}).join('')+'</table>';
+ var add=function(s){var m=parseFloat(String($('#km',b).value).replace(',','.'));if(!(m>0)){toast('Entre un montant');return;}var n=new Date();D.caisse.push({d:day,h:('0'+n.getHours()).slice(-2)+':'+('0'+n.getMinutes()).slice(-2),l:$('#kl',b).value||(s==='in'?'Vente':'Dépense'),m:m,cur:$('#kc',b).value,s:s});save();draw();};
+ $$('[data-s]',b).forEach(function(x){x.onclick=function(){add(x.dataset.s);};});$('#km',b).addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();add('in');}});$('#kd',b).onchange=function(e){day=e.target.value;draw();};
+ $$('[data-del]',b).forEach(function(x){x.onclick=function(){D.caisse.splice(+x.dataset.del,1);save();draw();};});
+ $('#kx',b).onclick=function(){var t='Caisse du '+day+'\n'+L.map(function(x){return x.h+' '+x.l+' : '+(x.s==='in'?'+':'-')+x.m+' '+x.cur;}).join('\n')+'\nSolde : '+Object.keys(tot).map(function(c){return fmtN(tot[c])+' '+c;}).join(', ');extOpen('https://wa.me/?text='+encodeURIComponent(t));};}draw();},{w:560,h:480});};
+/* Internet */
+APPF.web=function(){openWin('web','Internet','🔎',function(b){b.innerHTML='<div class="row"><input class="inp" id="wq" placeholder="Adresse (ex : vodacom.cd) ou recherche" style="flex:1"><button class="btn p" id="wg">Aller</button></div><div class="note">Les sites s\'ouvrent dans le navigateur de la tablette.</div><h4>Favoris</h4><div class="row">'+[['Google','https://www.google.com'],['WhatsApp Web','https://web.whatsapp.com'],['YouTube','https://www.youtube.com'],['Kalamu',GH+'KALAMU/'],['Lushi Plan',GH+'lushi-plan/'],['LushiPratique',GH]].map(function(f){return '<button class="btn" data-u="'+f[1]+'">'+f[0]+'</button>';}).join('')+'</div>';
+ var go=function(){var q=$('#wq',b).value.trim();if(!q)return;var u=/^https?:\/\//.test(q)?q:(/^[\w-]+(\.[\w-]+)+(\/.*)?$/.test(q)?'https://'+q:'https://www.google.com/search?q='+encodeURIComponent(q));extOpen(u);};$('#wg',b).onclick=go;$('#wq',b).addEventListener('keydown',function(e){if(e.key==='Enter')go();});$$('[data-u]',b).forEach(function(x){x.onclick=function(){extOpen(x.dataset.u);};});},{w:520,h:300});};
+/* Paramètres */
+var SETW=null;function rfSettings(){if(SETW&&SETW.render)SETW.render();layoutBadge();}
+APPF.set=function(){SETW=openWin('set','Paramètres','⚙️',function(b,w){var tab=w.tab||'kb';
+ w.render=function(){if(w.tab)tab=w.tab;var seg=function(id,opts,cur){return '<div class="seg" data-seg="'+id+'">'+opts.map(function(o){return '<button data-v="'+o[0]+'" class="'+(String(cur)===String(o[0])?'on':'')+'">'+o[1]+'</button>';}).join('')+'</div>';};var h='<div class="row">'+seg('tab',[['kb','⌨ Clavier'],['ms','🖱 Souris'],['ec','🎨 Personnaliser'],['ap','📱 Applis'],['dt','💾 Données']],tab)+'</div>';
+  if(tab==='kb'){h+='<h4>Disposition de ton clavier physique</h4><div class="note">Choisis comment les touches doivent écrire dans Lushi Tab. Exemple : ton clavier est QWERTY mais tu veux écrire en AZERTY → choisis « AZERTY — France ». Raccourci : <span class="kbd">Alt</span>+<span class="kbd">Maj</span> pour passer d\'une disposition à l\'autre.</div><div style="display:grid;gap:6px;margin:8px 0">'+LORD.map(function(k){return '<label class="row" style="margin:0;gap:8px;padding:6px 8px;border:1px solid var(--ln);border-radius:8px;'+(D.layout===k?'border-color:var(--ac)':'')+'"><input type="radio" name="lay" value="'+k+'" '+(D.layout===k?'checked':'')+'> <b style="min-width:42px">'+LAYOUTS[k].s+'</b> '+LAYOUTS[k].n+'</label>';}).join('')+'</div>'
+   +'<h4>Essaie ici</h4><textarea class="inp" id="ktest" rows="2" style="width:100%" placeholder="Tape quelques lettres pour vérifier…"></textarea>'
+   +'<h4>Pour toute la tablette (applis Android)</h4><div class="note">Android : <b>Paramètres › Système › Langues et saisie › Clavier physique</b> › touche ton clavier › <b>Configurer la disposition</b> › choisis <b>Français</b> (AZERTY) ou <b>Anglais (US)</b>. Ça change le clavier pour toutes les applis. Pour l\'écran tactile : Gboard › Langues › Français › AZERTY.</div>'
+   +'<h4>Raccourcis comme sur PC</h4><div class="note"><span class="kbd">Win</span> menu Démarrer · <span class="kbd">Alt</span>+<span class="kbd">Tab</span> changer de fenêtre · <span class="kbd">Ctrl</span>+<span class="kbd">W</span> fermer · <span class="kbd">F11</span> plein écran.<br>Avec <span class="kbd">Win</span> <i>ou</i> <span class="kbd">Ctrl</span>+<span class="kbd">Alt</span> : <span class="kbd">←</span> <span class="kbd">→</span> moitié d\'écran · <span class="kbd">↑</span> agrandir · <span class="kbd">↓</span> réduire · <span class="kbd">Z</span> dispositions Snap · <span class="kbd">D</span> bureau · <span class="kbd">A</span> paramètres rapides · <span class="kbd">N</span> notifications · <span class="kbd">W</span> widgets · <span class="kbd">V</span> presse-papiers · <span class="kbd">E</span> explorateur · <span class="kbd">S</span> rechercher · <span class="kbd">I</span> paramètres · <span class="kbd">L</span> verrouiller · <span class="kbd">Tab</span> vue des tâches · <span class="kbd">Win</span>+<span class="kbd">Ctrl</span>+<span class="kbd">←/→</span> changer de bureau.</div>';}
+  else if(tab==='ms'){h+='<h4>Taille du pointeur</h4>'+seg('ptr',[['mini','Très petit'],['petit','Petit'],['moyen','Moyen'],['grand','Grand']],D.ptr)+'<h4>Couleur du pointeur</h4>'+seg('pcol',[['blanc','Blanc'],['noir','Noir'],['orange','Orange'],['jaune','Jaune']],D.pcol)
+   +'<h4>Vitesse du double-clic</h4>'+seg('dbl',[[300,'Rapide'],[400,'Normal'],[600,'Lent']],D.dbl)+'<div class="note" style="margin-top:8px">Dans Lushi Tab, le pointeur de la souris est remplacé par un pointeur fin et précis (flèche, main sur les boutons, barre en I dans le texte). Clic droit = menu, double-clic sur une icône = ouvrir, glisser la barre de titre = déplacer une fenêtre (contre un bord : moitié d\'écran, en haut : plein écran).</div>'
+   +'<h4>Pour toute la tablette</h4><div class="note">La taille et la vitesse du pointeur d\'Android se règlent dans <b>Paramètres › Système › Langues et saisie › Vitesse du pointeur</b> et <b>Accessibilité › Grand pointeur de souris</b> (désactive-le s\'il est trop grand).</div>';}
+  else if(tab==='ec'){h+='<h4>Fond d\'écran</h4><div class="walls">'+WALLS.map(function(g,i){return '<button data-wall="'+i+'" class="'+(D.wall===i?'on':'')+'" style="background:'+g+'"></button>';}).join('')+'</div><h4>Thème des fenêtres</h4>'+seg('theme',[['dark','Sombre'],['light','Clair']],D.theme)+'<h4>Couleur d\'accent</h4><div class="accs">'+Object.keys(ACCENTS).map(function(k){return '<button data-acc="'+k+'" title="'+k+'" class="'+(D.accent===k?'on':'')+'" style="background:'+ACCENTS[k][0]+'"></button>';}).join('')+'</div><h4>Barre des tâches</h4>'+seg('align',[['center','Centrée'],['left','À gauche']],D.align)+'<h4>Effets de transparence</h4>'+seg('transp',[[1,'Activés'],[0,'Désactivés']],D.transp?1:0)+'<h4>Horloge sur le bureau</h4>'+seg('deskClock',[[1,'Afficher'],[0,'Masquer']],D.deskClock?1:0)+'<h4>Plein écran automatique (cache la barre et les 3 boutons d\'Android)</h4>'+seg('autoFull',[[1,'Oui'],[0,'Non']],D.autoFull===false?0:1)+'<h4>Mode verrouillé (APK) : on ne sort que par Démarrer › ⏻ Éteindre</h4>'+seg('kiosk',[[1,'Oui'],[0,'Non']],D.kiosk===false?0:1)+'<h4>Applis Android (WhatsApp, YouTube…) en fenêtres flottantes</h4>'+seg('freeform',[[1,'Oui'],[0,'Non']],D.freeform===false?0:1)+'<div class="note">Il faut activer dans Android : Options pour les développeurs › « Activer les fenêtres de forme libre », puis redémarrer la tablette. Sinon les applis s\'ouvrent en plein écran.</div><h4>Taille du texte</h4>'+seg('fs',[[12,'Petit'],[14,'Normal'],[16,'Grand'],[18,'Très grand']],D.fs)+'<h4>Ton nom</h4><input class="inp" id="sname" value="'+esc(D.name)+'">';}
+  else if(tab==='ap'){h+='<h4>Applis Android dans le menu Démarrer</h4><div class="note">Elles s\'ouvrent avec l\'APK de Lushi Tab. Le « nom du paquet » se trouve dans le lien Play Store (…?id=<b>com.whatsapp</b>).</div><table>'+D.apps.map(function(a,i){return '<tr><td>'+a.ic+'</td><td>'+esc(a.n)+'</td><td class="note">'+esc(a.pkg)+'</td><td><button class="btn d" data-rm="'+i+'" style="padding:2px 8px">✕</button></td></tr>';}).join('')+'</table>'
+   +'<div class="row"><input class="inp" id="an" placeholder="Nom (ex : M-Pesa)" style="width:140px"><input class="inp" id="ap2" placeholder="com.exemple.appli" style="flex:1;min-width:150px"><input class="inp" id="ai" placeholder="😀" style="width:50px"><button class="btn p" id="aadd">Ajouter</button></div>';}
+  else{h+='<h4>Sauvegarde</h4><div class="note">Notes, caisse, taux et réglages sont gardés dans la tablette. Fais une copie de temps en temps.</div><div class="row"><button class="btn p" id="dexp">💾 Exporter (fichier)</button><button class="btn" id="dimp">📂 Importer</button><input type="file" id="dfile" accept=".json" style="display:none"></div><h4>Remise à zéro</h4><button class="btn d" id="drst">Tout effacer</button>';}
+  b.innerHTML=h;
+  $$('[data-seg]',b).forEach(function(sg){$$('button',sg).forEach(function(x){x.onclick=function(){var id=sg.dataset.seg,v=x.dataset.v;if(id==='tab'){tab=w.tab=v;w.render();return;}D[id]=/^\d+$/.test(v)?+v:v;if(id==='autoFull')D.autoFull=!!(+v);if(id==='freeform')D.freeform=!!(+v);if(id==='kiosk'){D.kiosk=!!(+v);var P=CAP();if(P)(D.kiosk?P.Kiosk.pin():P.Kiosk.unpin()).catch(function(){});}save();applyLook();taskbar();w.render();};});});
+  $$('input[name=lay]',b).forEach(function(x){x.onchange=function(){D.layout=x.value;save();layoutBadge();w.render();toast('Clavier : '+LAYOUTS[D.layout].n);};});
+  $$('[data-acc]',b).forEach(function(x){x.onclick=function(){D.accent=x.dataset.acc;save();applyLook();w.render();};});$$('[data-wall]',b).forEach(function(x){x.onclick=function(){D.wall=+x.dataset.wall;save();applyLook();w.render();};});
+  var sn=$('#sname',b);if(sn)sn.onchange=function(){D.name=sn.value||'Michel';save();applyLook();};
+  $$('[data-rm]',b).forEach(function(x){x.onclick=function(){D.apps.splice(+x.dataset.rm,1);save();w.render();desktop();};});
+  var aa=$('#aadd',b);if(aa)aa.onclick=function(){var n=$('#an',b).value.trim(),p=$('#ap2',b).value.trim();if(!n||!/^[a-zA-Z][\w]*(\.[\w]+)+$/.test(p)){toast('Nom et paquet valides (ex : com.whatsapp)');return;}D.apps.push({n:n,pkg:p,ic:$('#ai',b).value||'📱',c:'#3d4652'});save();w.render();desktop();};
+  var de=$('#dexp',b);if(de){de.onclick=function(){var bl=new Blob([JSON.stringify(D)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='lushitab-sauvegarde.json';document.body.appendChild(a);a.click();a.remove();};$('#dimp',b).onclick=function(){$('#dfile',b).click();};$('#dfile',b).onchange=function(e){var f=e.target.files[0];if(!f)return;f.text().then(function(t){var o=JSON.parse(t);for(var k in o)D[k]=o[k];save();location.reload();}).catch(function(){toast('Fichier illisible');});};$('#drst',b).onclick=function(){if(confirm('Effacer toutes les données de Lushi Tab ?')){localStorage.removeItem(KEY);location.reload();}};}};w.render();},{w:600,h:520});};
+/* Aide */
+APPF.help=function(){openWin('help','Aide','❓',function(b){b.innerHTML='<h4>Bienvenue dans Lushi Tab</h4><div class="note" style="font-size:13px;line-height:1.6">• <b>Menu Démarrer</b> : le bouton <b>L</b> au milieu de la barre, ou la touche <span class="kbd">Win</span>. Tapez pour chercher une appli ou une note. Appui long (ou clic droit) sur une appli : l\'épingler au menu ou à la barre des tâches.<br>• <b>Widgets</b> (météo, taux, caisse, notes) : bouton météo à gauche de la barre.<br>• <b>Paramètres rapides</b> (mode sombre, éclairage nocturne, luminosité, concentration…) : bouton 📶🔋 à droite.<br>• <b>Notifications et calendrier</b> : touchez l\'heure.<br>• <b>Fenêtres</b> : glissez la barre de titre. Contre un bord : moitié d\'écran ; dans un coin : quart d\'écran ; en haut : plein écran. Maintenez le bouton ▢ pour les <b>dispositions Snap</b> (2, 3 ou 4 fenêtres côte à côte).<br>• <b>Vue des tâches</b> 🗂️ : toutes les fenêtres et vos <b>bureaux virtuels</b> (Bureau 1, Bureau 2…).<br>• <b>Explorateur de fichiers</b> 📁 : vos notes, votre caisse et les fichiers de la tablette.<br>• <b>Presse-papiers</b> : <span class="kbd">Ctrl</span>+<span class="kbd">Alt</span>+<span class="kbd">V</span> pour retrouver ce que vous avez copié.<br>• <b>Afficher le bureau</b> : la petite barre tout à droite.<br>• <b>Clavier</b> : le badge FR / US change la disposition (<span class="kbd">Alt</span>+<span class="kbd">Maj</span>). Tous les raccourcis : Paramètres › Clavier.<br>• <b>Application Android</b> : <a href="'+GH+'lushi-tab/lushitab.apk" style="color:var(--ac)">télécharger lushitab.apk</a>. Elle cache la barre et les 3 boutons d\'Android (glissez depuis le bord pour les revoir un instant).<br>• <b>Comme écran d\'accueil</b> : avec l\'APK, appuyez sur la touche Accueil et choisissez « Lushi Tab » › Toujours.</div>';},{w:560,h:460});};
+
+/* ================== démarrage ================== */
+window.addEventListener('keydown',function(e){var t=topWin();if(t&&t.key&&t.el.classList.contains('act')&&!(e.target&&(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')))t.key(e);});
+window.addEventListener('resize',function(){WINS.forEach(function(w){var el=w.el;if(el.offsetLeft>innerWidth-80)el.style.left=Math.max(0,innerWidth-el.offsetWidth)+'px';if(el.offsetTop>innerHeight-90)el.style.top='0px';});});
+window.addEventListener('online',function(){tick();weather();notify('Connecté à Internet','📶');});window.addEventListener('offline',function(){tick();notify('Connexion Internet perdue','🚫');});
+window.addEventListener('lushiback',(function(){return function(){if($$('.panel.on').length||$('#ctx').style.display==='block'){closePanels();return;}var t=topWin();if(t){closeWin(t);return;}openStart();};})());
+if(!CAP()){window.addEventListener('pointerup',function(){if(D.autoFull===false||document.fullscreenElement||$('#lock').classList.contains('on'))return;try{var q=document.documentElement.requestFullscreen({navigationUI:'hide'});if(q&&q.catch)q.catch(function(){});}catch(e){}},true);}
+kioskOn();
+applyLook();layoutBadge();desktop();taskbar();tick();weather();badge();setInterval(weather,30*60000);
+if(!localStorage.getItem('lushitab_hello')){try{localStorage.setItem('lushitab_hello','1');}catch(e){}setTimeout(function(){launch('help');},500);}
+if(!localStorage.getItem('lushitab_w11')){try{localStorage.setItem('lushitab_w11','1');}catch(e){}setTimeout(function(){notify('Bienvenue dans le nouveau Lushi Tab : barre des tâches centrée, widgets, paramètres rapides, dispositions Snap et bureaux virtuels.','✨');},1200);}
+</script>
+<!-- ===== Code de l'application Android (APK), lu par l'usine GitHub ===== -->
+<script type="text/plain" id="apk-main">
+package com.lushipratique.lushitab;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.view.WindowManager;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+import com.getcapacitor.BridgeActivity;
+
+public class MainActivity extends BridgeActivity {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        registerPlugin(LushiNativePlugin.class);
+        super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= 28) {
+            getWindow().getAttributes().layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        }
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        toutCacher();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        toutCacher();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) toutCacher();
+    }
+
+    // Cache la barre du haut ET les 3 boutons d'Android : Lushi Tab occupe tout l'écran.
+    // Un glissement depuis le bord les fait réapparaître un instant.
+    private void toutCacher() {
+        WindowInsetsControllerCompat c = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        c.hide(WindowInsetsCompat.Type.systemBars());
+        c.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+    }
+
+    // Le bouton Retour ne quitte pas Lushi Tab : il ferme le menu ou la fenêtre du dessus.
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onBackPressed() {
+        if (getBridge() != null) getBridge().triggerWindowJSEvent("lushiback");
+    }
+}
+</script>
+<script type="text/plain" id="apk-plugin">
+package com.lushipratique.lushitab;
+
+import android.app.ActivityManager;
+import android.app.ActivityOptions;
+import android.graphics.Rect;
+import android.util.DisplayMetrics;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
+import com.getcapacitor.JSObject;
+import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginCall;
+import com.getcapacitor.PluginMethod;
+import com.getcapacitor.annotation.CapacitorPlugin;
+
+@CapacitorPlugin(name = "LushiNative")
+public class LushiNativePlugin extends Plugin {
+    private boolean epingle() {
+        ActivityManager am = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+        return am != null && am.getLockTaskModeState() != ActivityManager.LOCK_TASK_MODE_NONE;
+    }
+
+    private void liberer() {
+        getActivity().runOnUiThread(() -> { try { if (epingle()) getActivity().stopLockTask(); } catch (Exception e) { } });
+        try { Thread.sleep(250); } catch (Exception e) { }
+    }
+
+    // Verrouille Lushi Tab : Accueil et Applis récentes ne font plus sortir.
+    @PluginMethod
+    public void pin(PluginCall call) {
+        getActivity().runOnUiThread(() -> { try { if (!epingle()) getActivity().startLockTask(); } catch (Exception e) { } });
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void unpin(PluginCall call) { liberer(); call.resolve(); }
+
+    // Démarrer > Éteindre : on rend la main à Android.
+    @PluginMethod
+    public void quit(PluginCall call) {
+        liberer();
+        getActivity().runOnUiThread(() -> {
+            WindowInsetsControllerCompat c = WindowCompat.getInsetsController(getActivity().getWindow(), getActivity().getWindow().getDecorView());
+            c.show(WindowInsetsCompat.Type.systemBars());
+            getActivity().moveTaskToBack(true);
+        });
+        call.resolve();
+    }
+
+    @PluginMethod
+    public void homeSettings(PluginCall call) {
+        liberer();
+        try {
+            Intent i = new Intent(Settings.ACTION_HOME_SETTINGS);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(i);
+        } catch (Exception e) {
+            Intent i = new Intent(Settings.ACTION_SETTINGS);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(i);
+        }
+        call.resolve();
+    }
+
+    // Ouvrir une appli Android (WhatsApp…) : en fenêtre flottante si la tablette le permet.
+    // On libère le verrou un instant ; Lushi Tab se reverrouille quand on y revient.
+    private static int cascade = 0;
+
+    @PluginMethod
+    public void openApp(PluginCall call) {
+        JSObject r = new JSObject();
+        try {
+            Intent i = getContext().getPackageManager().getLaunchIntentForPackage(call.getString("pkg", ""));
+            if (i == null) { r.put("ok", false); call.resolve(r); return; }
+            liberer();
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (call.getBoolean("fenetre", true)) {
+                DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+                int w = (int) (dm.widthPixels * 0.55), hh = (int) (dm.heightPixels * 0.70);
+                int pas = (int) (40 * dm.density), dx = (cascade % 6) * pas;
+                cascade++;
+                int l = (dm.widthPixels - w) / 2 - 2 * pas + dx, t = (int) (dm.heightPixels * 0.08) + dx / 2;
+                ActivityOptions o = ActivityOptions.makeBasic();
+                o.setLaunchBounds(new Rect(l, t, l + w, t + hh));
+                try { ActivityOptions.class.getMethod("setLaunchWindowingMode", int.class).invoke(o, 5); } catch (Exception e) { }
+                getContext().startActivity(i, o.toBundle());
+            } else {
+                getContext().startActivity(i);
+            }
+            r.put("ok", true); call.resolve(r);
+        } catch (Exception e) { r.put("ok", false); call.resolve(r); }
+    }
+
+    @PluginMethod
+    public void openUrl(PluginCall call) {
+        try {
+            liberer();
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(call.getString("url", "")));
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(i);
+            call.resolve();
+        } catch (Exception e) { call.reject("Impossible d'ouvrir le lien"); }
+    }
+}
+</script>
+<script type="text/plain" id="apk-icon">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</script>
+</body>
+</html>
