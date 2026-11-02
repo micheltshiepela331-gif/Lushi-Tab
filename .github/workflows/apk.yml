@@ -30,7 +30,7 @@ jobs:
           npx cap init "Lushi Tab" com.lushipratique.lushitab --web-dir www
           npx cap add android
           R=android/app/src/main
-          find $R/res -name 'splash.png' -delete
+          find $R/res -name 'splash.png' -delete && mkdir -p $R/res/drawable &&printf '%s\n' '<?xml version="1.0" encoding="utf-8"?>' '<layer-list xmlns:android="http://schemas.android.com/apk/res/android"><item><shape><gradient android:startColor="#0B1220" android:endColor="#1E3A8A" android:angle="270"/></shape></item><item android:drawable="@mipmap/ic_launcher" android:gravity="center" android:width="120dp" android:height="120dp"/></layer-list>' > android/app/src/main/res/drawable/splash.xml
           rm -rf $R/res/mipmap-anydpi-v26
           python3 - <<'PY'
           import re, base64
